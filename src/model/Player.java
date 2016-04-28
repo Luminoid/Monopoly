@@ -13,7 +13,10 @@ import java.util.Map;
  * Created by Ethan on 16/4/27.
  */
 public class Player {
+    private static int nextId = 1;
+
     private String name;
+    private int id;
     private int position;
     private Orientation orientation;
     private double cash;
@@ -26,6 +29,7 @@ public class Player {
 
     public Player(String name, double cash) {
         this.name = name;
+        this.id = nextId++;
         this.position = 1;
         this.orientation = Orientation.FORWARD;
         this.cash = cash;
@@ -45,12 +49,28 @@ public class Player {
         this.name = name;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public int getPosition() {
         return position;
     }
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public Orientation getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(Orientation orientation) {
+        this.orientation = orientation;
     }
 
     public double getCash() {
