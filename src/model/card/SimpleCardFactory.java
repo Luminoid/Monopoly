@@ -4,28 +4,28 @@ package model.card;
  * Created by Ethan on 16/4/27.
  */
 public class SimpleCardFactory {
-    public Card createCard(CardType type) {
+    public Card createCard(String cardType) {
         Card card = null;
-        switch (type) {
-            case BarricadeCard:
+        switch (cardType) {
+            case "BarricadeCard":
                 card = new BarricadeCard();
                 break;
-            case CashEqualityCard:
+            case "CashEqualityCard":
                 card = new CashEqualityCard();
                 break;
-            case ControlledDiceCard:
+            case "ControlledDiceCard":
                 card = new ControlledDiceCard();
                 break;
-            case LotteryCard:
+            case "LotteryCard":
                 card = new LotteryCard();
                 break;
-            case PurchaseLandCard:
+            case "PurchaseLandCard":
                 card = new PurchaseLandCard();
                 break;
-            case ReverseCard:
+            case "ReverseCard":
                 card = new ReverseCard();
                 break;
-            case StayCard:
+            case "StayCard":
                 card = new StayCard();
                 break;
         }

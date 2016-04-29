@@ -1,5 +1,7 @@
 package model;
 
+import view.map.MapGenerator;
+
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -17,13 +19,15 @@ public class Kernal {
 
     private Kernal(int playerNum) {
         this.playerNum = playerNum;
+        date = new GregorianCalendar();
+        map = MapGenerator.generate();
     }
 
     public static Kernal getInstance() {
         return uniqueInstance;
     }
 
-    public static void createInstance(int playerNum){
+    public static void createInstance(int playerNum) {
         if (uniqueInstance == null) {
             synchronized (Kernal.class) {
                 if (uniqueInstance == null) {
@@ -31,6 +35,14 @@ public class Kernal {
                 }
             }
         }
+    }
+
+    public void startRound() {
+
+    }
+
+    public Map getMap() {
+        return map;
     }
 
     public GregorianCalendar getDate() {
@@ -45,11 +57,19 @@ public class Kernal {
         return playerNum;
     }
 
-    public List<Player> getPlayers(){
+    public List<Player> getPlayers() {
         return players;
     }
 
-    public void addPlayer(Player player){
+    public void addPlayer(Player player) {
+        players.add(player);
+    }
 
+    public int getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(int currentPlayer) {
+        this.currentPlayer = currentPlayer;
     }
 }

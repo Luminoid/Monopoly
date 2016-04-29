@@ -1,4 +1,5 @@
-package view;
+import view.init.GameBegin;
+import view.init.UserInfoSetting;
 
 /**
  * Created by Ethan on 16/4/28.

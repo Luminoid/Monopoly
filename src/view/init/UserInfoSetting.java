@@ -1,4 +1,4 @@
-package view;
+package view.init;
 
 import model.Kernal;
 import model.Player;
@@ -16,11 +16,11 @@ public class UserInfoSetting {
         while (true) {
             try {
                 System.out.print(">> ");
-                int num = scanner.nextInt();
-                if (num >= 2 && num <= 4){
+                int num = Integer.parseInt(scanner.nextLine());
+                if (num >= 2 && num <= 4) {
                     Kernal.createInstance(num);
                     break;
-                }else {
+                } else {
                     System.out.println("您输入的玩家个数不在范围内，请重新输入：");
                 }
             } catch (Exception ex) {
@@ -30,16 +30,17 @@ public class UserInfoSetting {
         // Cash
         System.out.println("请输入玩家的初始现金(默认为5000)：");
         double cash;
-        while (true){
+        while (true) {
             try {
                 System.out.print(">> ");
-                if (!scanner.hasNext()){
+                String s = scanner.nextLine();
+                if (s.length() == 0) {
                     cash = 5000.0;
                 } else {
-                    cash = scanner.nextDouble();
+                    cash = Double.parseDouble(s);
                 }
                 break;
-            } catch (Exception ex){
+            } catch (Exception ex) {
                 System.out.println("您的输入格式不正确，请重新输入：");
             }
         }
@@ -55,12 +56,15 @@ public class UserInfoSetting {
         while (true) {
             try {
                 System.out.print(">> ");
-                if (!scanner.hasNext()){
+
+                String s = scanner.nextLine();
+                if (s.length() == 0) {
                     Kernal.getInstance().setDate(2016, 4, 1);
                 } else {
-                    int year = scanner.nextInt();
-                    int month = scanner.nextInt();
-                    int day = scanner.nextInt();
+                    String[] dateArr = s.split(" ");
+                    int year = Integer.parseInt(dateArr[0]);
+                    int month = Integer.parseInt(dateArr[1]);
+                    int day = Integer.parseInt(dateArr[2]);
                     Kernal.getInstance().setDate(year, month, day);
                 }
                 break;

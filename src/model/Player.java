@@ -1,7 +1,7 @@
 package model;
 
 import model.card.Card;
-import model.spot.HouseSpot;
+import model.spot.EstateSpot;
 import util.Orientation;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class Player {
     private double cash;
     private double deposit;
     private int ticket;
-    private ArrayList<HouseSpot> houses;
+    private ArrayList<EstateSpot> houses;
     private Hashtable<Card, Integer> cards;
     private HashMap<Stock, Integer> stocks;
     private boolean isBankrupt;
@@ -35,10 +35,14 @@ public class Player {
         this.cash = cash;
         this.deposit = 0;
         this.ticket = 0;
-        this.houses = new ArrayList<HouseSpot>();
+        this.houses = new ArrayList<EstateSpot>();
         this.cards = new Hashtable<Card, Integer>();
         this.stocks = new HashMap<Stock, Integer>();
         this.isBankrupt = false;
+    }
+
+    public void giveUp() {
+        this.isBankrupt = true;
     }
 
     public String getName() {
@@ -61,8 +65,15 @@ public class Player {
         return position;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
+    public void addPosition(int distance) {
+        int mapSize = Kernal.getInstance().getMap().getSize();
+        distance *= (orientation == Orientation.FORWARD ? 1 : -1);
+        position += distance;
+        if (position >= mapSize) {
+            position -= mapSize;
+        } else if (position < 0) {
+            position += mapSize;
+        }
     }
 
     public Orientation getOrientation() {
@@ -97,11 +108,11 @@ public class Player {
         this.ticket = ticket;
     }
 
-    public ArrayList<HouseSpot> getHouses() {
+    public ArrayList<EstateSpot> getHouses() {
         return houses;
     }
 
-    public void addHouse(HouseSpot house) {
+    public void addHouse(EstateSpot house) {
         houses.add(house);
     }
 
