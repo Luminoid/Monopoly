@@ -1,12 +1,10 @@
 package model;
 
-import action.command.BankruptCommand;
-import action.command.CommandType;
-import action.command.SellEstateCommand;
-import action.command.SimpleCommamdFactory;
+import action.command.*;
 import model.card.CardType;
 import model.spot.EstateSpot;
 import util.PlayerOrientation;
+import util.Tool;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,7 +49,12 @@ public class Player {
     }
 
     public void giveUp() {
+        this.cash = 0;
+        this.deposit = 0;
+        this.getHouses().clear();
         this.isBankrupt = true;
+        PromptCommand command = (PromptCommand) SimpleCommamdFactory.createCommand(CommandType.PROMPT_COMMAND);
+        command.setCommandStr(name + "已认输");
     }
 
     public boolean pay(double fee) {
@@ -133,8 +136,7 @@ public class Player {
 
     public void addPosition(int distance) {
         int mapSize = Kernal.getInstance().getMap().getSize();
-        distance *= (orientation == PlayerOrientation.FORWARD ? 1 : -1);
-        position += distance;
+        position += Tool.distanceWithOrientation(this, distance);
         if (position >= mapSize) {
             position -= mapSize;
         } else if (position < 0) {
@@ -165,6 +167,10 @@ public class Player {
 
     public double getCash() {
         return cash;
+    }
+
+    public void addCash(double cash){
+        this.cash += cash;
     }
 
     public void setCash(double cash) {

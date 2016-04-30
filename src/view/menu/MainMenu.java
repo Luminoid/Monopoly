@@ -90,7 +90,7 @@ public class MainMenu {
                 // Do nothing
             } else if (choice == 99) {
                 usableCards.stream().
-                        map(e -> (e.getName() + "：\t" + e.getDescription())).forEach(System.out::println);
+                        map(e -> (e.getName() + "： \t" + e.getDescription())).forEach(System.out::println);
             } else {
                 Card usedCard = usableCards.get(choice);
                 if (usedCard.use(player)) {
@@ -103,7 +103,11 @@ public class MainMenu {
     }
 
     private static void showWarning(Player player) {
-
+        for (int i = 1; i <= 10; i++){
+            if (MapView.getDistantSpot(player, i).isBlocked()){
+                System.out.println("前方"+i+"步内有路障");
+            }
+        }
     }
 
     private static void showSpotInfo(Player player) {
@@ -138,6 +142,11 @@ public class MainMenu {
         int step = Dice.getInstance().rollDice();
         System.out.println("玩家 " + player.getName() + " 前进了" + step + "步");
         for (int i = 0; i < step; i++) {
+            if (MapView.getDistantSpot(player, 1).isBlocked()){
+                MapView.getDistantSpot(player, 1).setBlocked(false);
+                player.move();
+                break;
+            }
             player.move();
         }
         MapView.getPlayerSpot(player).arriveEvent(player);

@@ -4,15 +4,12 @@ import action.command.CommandType;
 import action.command.FindWinnerCommand;
 import action.command.SimpleCommamdFactory;
 import model.card.CardType;
+import util.playerTool;
 import view.map.MapGenerator;
 import view.menu.MainMenu;
 import view.menu.RoundStartMenu;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * Created by Ethan on 16/4/28.
@@ -20,6 +17,7 @@ import java.util.stream.Collectors;
 public class Kernal {
     private Map map;
     private GregorianCalendar date;
+    private GregorianCalendar endDate;
     private int playerNum;
     private List<Player> players;
 
@@ -29,6 +27,7 @@ public class Kernal {
         this.playerNum = playerNum;
         players = new ArrayList<>();
         date = new GregorianCalendar();
+        endDate = new GregorianCalendar();
         map = MapGenerator.generate();
     }
 
@@ -47,11 +46,32 @@ public class Kernal {
     }
 
     public void circulate() {
-        while (!findWinner(players)) {
+        while (date.before(endDate)) {
             RoundStartMenu.displayRoundMenu();
-            players.stream().filter(player -> !player.isBankrupt()).forEach(MainMenu::displayMainMenu);
+            for (Iterator<Player> it = players.iterator(); it.hasNext();){
+                Player player = it.next();
+                if (players.size()==1){
+                    FindWinnerCommand command = (FindWinnerCommand) SimpleCommamdFactory.createCommand(CommandType.FIND_WINNER_COMMAND);
+                    command.setCommandStr(player.getName());
+                    return;
+                }
+                MainMenu.displayMainMenu(player);
+                if (player.isBankrupt()){
+                    it.remove();
+                }
+            }
             date.add(Calendar.DATE, 1);
         }
+        // Time is over
+        Player winner = players.stream().max((a, b)-> {
+            if (playerTool.getAsset(a)-playerTool.getAsset(b)>0){
+                return 1;
+            } else {
+                return -1;
+            }
+        }).get();
+        FindWinnerCommand command = (FindWinnerCommand) SimpleCommamdFactory.createCommand(CommandType.FIND_WINNER_COMMAND);
+        command.setCommandStr(winner.getName());
     }
 
     public Map getMap() {
@@ -62,8 +82,16 @@ public class Kernal {
         return date;
     }
 
+    public GregorianCalendar getEndDate() {
+        return endDate;
+    }
+
     public void setDate(int year, int month, int day) {
         date.set(year, month - 1, day);
+    }
+
+    public void setEndDate(int year, int month, int day) {
+        endDate.set(year, month - 1, day);
     }
 
     public int getPlayerNum() {
@@ -84,17 +112,5 @@ public class Kernal {
                 e.put(cardType, 10);
             }
         });
-    }
-
-    public static boolean findWinner(List<Player> players) {
-        List<Player> activePlayers = players.stream().filter(e -> !e.isBankrupt()).collect(Collectors.toList());
-        if (activePlayers.size() == 1) {
-            FindWinnerCommand command = (FindWinnerCommand) SimpleCommamdFactory.createCommand(CommandType.FIND_WINNER_COMMAND);
-            command.setCommandStr(activePlayers.get(0).getName());
-            command.action();
-            return true;
-        } else {
-            return false;
-        }
     }
 }

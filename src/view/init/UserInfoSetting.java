@@ -72,5 +72,26 @@ public class UserInfoSetting {
                 System.out.println("您的输入格式不正确，请重新输入：");
             }
         }
+        // End time
+        System.out.println("请输入游戏的结束时间，格式: yyyy mm dd。默认为2016 8 31");
+        while (true) {
+            try {
+                System.out.print(">> ");
+
+                String s = scanner.nextLine();
+                if (s.length() == 0) {
+                    Kernal.getInstance().setEndDate(2016, 8, 1);
+                } else {
+                    String[] dateArr = s.split(" ");
+                    int year = Integer.parseInt(dateArr[0]);
+                    int month = Integer.parseInt(dateArr[1]);
+                    int day = Integer.parseInt(dateArr[2]);
+                    Kernal.getInstance().setEndDate(year, month, day);
+                }
+                break;
+            } catch (Exception ex) {
+                System.out.println("您的输入格式不正确，请重新输入：");
+            }
+        }
     }
 }

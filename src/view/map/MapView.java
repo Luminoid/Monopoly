@@ -4,6 +4,7 @@ import model.Kernal;
 import model.Player;
 import model.spot.EstateSpot;
 import model.spot.Spot;
+import util.Tool;
 
 /**
  * Created by Ethan on 16/4/29.
@@ -27,7 +28,8 @@ public class MapView {
 
     public static Spot getDistantSpot(Player player, int distance) {
         TuiMap map = (TuiMap) Kernal.getInstance().getMap();
-        return map.getSpots().get(player.getPosition());
+        Tool.distanceWithOrientation(player, distance);
+        return map.getSpots().get(player.getPosition() + distance);
     }
 
     public static SpotLoc getPlayerLoc(Player player) {

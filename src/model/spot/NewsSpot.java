@@ -1,5 +1,8 @@
 package model.spot;
 
+import action.event.EventType;
+import action.event.NewsEvent;
+import action.event.SimpleEventFactory;
 import model.Player;
 
 /**
@@ -14,6 +17,7 @@ public class NewsSpot extends Spot {
 
     @Override
     public void arriveEvent(Player player) {
-
+        NewsEvent event = (NewsEvent) SimpleEventFactory.createEvent(EventType.NEWS_EVENT);
+        event.toggle(player);
     }
 }

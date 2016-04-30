@@ -12,5 +12,6 @@ public abstract class FindWinnerCommand implements Command {
 
     public void setCommandStr(String commandStr) {
         this.commandStr = commandStr;
+        action();
     }
 }

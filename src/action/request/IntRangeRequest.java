@@ -3,9 +3,11 @@ package action.request;
 /**
  * Created by Ethan on 16/4/30.
  */
-public abstract class ControlledDiceRequest implements Request<Integer> {
+public abstract class IntRangeRequest implements Request<Integer> {
     private String questionStr;
     private int answer;
+    protected int floor;
+    protected int ceiling;
 
     @Override
     public Integer getAnswer() {
@@ -23,5 +25,15 @@ public abstract class ControlledDiceRequest implements Request<Integer> {
     public void setQuestionStr(String questionStr) {
         this.questionStr = questionStr;
         action();
+    }
+
+    public IntRangeRequest setFloor(int floor) {
+        this.floor = floor;
+        return this;
+    }
+
+    public IntRangeRequest setCeiling(int ceiling) {
+        this.ceiling = ceiling;
+        return this;
     }
 }

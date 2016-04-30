@@ -6,6 +6,7 @@ import action.command.SimpleCommamdFactory;
 import model.Player;
 import model.spot.EstateSpot;
 import util.EstateAction;
+import util.Tool;
 
 /**
  * Created by Ethan on 16/4/30.
@@ -20,14 +21,16 @@ public class EstateEvent extends Event {
         PromptCommand command = (PromptCommand) SimpleCommamdFactory.createCommand(CommandType.PROMPT_COMMAND);
         switch (getEstateAction()) {
             case PURCHASE:
-                command.setCommandStr(player.getName() + " 已花¥" + getFee() + "购买" + getSpot().getLocName());
+                command.setCommandStr(player.getName() + " 已花¥" + Tool.formatMoney(getFee()) + "购买" +
+                        getSpot().getLocName());
                 break;
             case LEVEL_UP:
-                command.setCommandStr(player.getName() + " 已花¥" + getFee() + "升级" + getSpot().getLocName() + "至"
-                        + getSpot().getLevel());
+                command.setCommandStr(player.getName() + " 已花¥" + Tool.formatMoney(getFee()) + "升级" +
+                        getSpot().getLocName() + "至" + getSpot().getLevel()+"级");
                 break;
             case PAY_FEE:
-                command.setCommandStr(player.getName() + " 路过" + getSpot().getLocName() + "，支付¥" + getFee() + "过路费");
+                command.setCommandStr(player.getName() + " 路过" + getSpot().getLocName() + "，支付¥" +
+                        Tool.formatMoney(getFee()) + "过路费");
                 break;
         }
     }

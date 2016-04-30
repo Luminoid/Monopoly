@@ -1,5 +1,8 @@
 package model.spot;
 
+import action.event.EventType;
+import action.event.LotteryEvent;
+import action.event.SimpleEventFactory;
 import model.Player;
 
 /**
@@ -14,7 +17,7 @@ public class LotterySpot extends Spot {
 
     @Override
     public void arriveEvent(Player player) {
-
+        LotteryEvent event = (LotteryEvent) SimpleEventFactory.createEvent(EventType.LOTTERY_EVENT);
+        event.toggle(player);
     }
-
 }

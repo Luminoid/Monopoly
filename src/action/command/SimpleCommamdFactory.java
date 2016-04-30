@@ -27,8 +27,8 @@ public class SimpleCommamdFactory {
             case YES_OR_NO_REQUEST:
                 command = new YesOrNoImpl();
                 break;
-            case CONTROLLED_DICE_REQUEST:
-                command = new ControlledDiceImpl();
+            case INT_RANGE_REQUEST:
+                command = new IntRangeImpl();
                 break;
         }
         return command;

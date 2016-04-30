@@ -13,6 +13,7 @@ public abstract class Spot {
     protected String typeName;
     protected String description;
     protected SpotType spotType;
+    protected boolean isBlocked;
 
     public abstract void arriveEvent(Player player);
 
@@ -42,5 +43,13 @@ public abstract class Spot {
 
     public SpotType getSpotType() {
         return spotType;
+    }
+
+    public boolean isBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
     }
 }

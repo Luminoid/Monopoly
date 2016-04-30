@@ -66,6 +66,7 @@ public class EstateSpot extends Spot {
 
     private void chargeFee(Player player) {
         player.charge(getPassByPrice());
+        this.getOwner().addCash(getPassByPrice());
         EstateEvent command = (EstateEvent) SimpleEventFactory.createEvent(EventType.ESTETE_EVENT);
         command.setEstateAction(EstateAction.PAY_FEE).setSpot(this).setFee(getPassByPrice());
         command.toggle(player);
