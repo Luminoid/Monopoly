@@ -30,15 +30,19 @@ public class Player {
     public Player(String name, double cash) {
         this.name = name;
         this.id = nextId++;
-        this.position = 1;
+        this.position = 0;
         this.orientation = Orientation.FORWARD;
         this.cash = cash;
         this.deposit = 0;
         this.ticket = 0;
-        this.houses = new ArrayList<EstateSpot>();
+        this.houses = new ArrayList<>();
         this.cards = new Hashtable<Card, Integer>();
         this.stocks = new HashMap<Stock, Integer>();
         this.isBankrupt = false;
+    }
+
+    public void move(){
+        addPosition(1);
     }
 
     public void giveUp() {
@@ -74,6 +78,19 @@ public class Player {
         } else if (position < 0) {
             position += mapSize;
         }
+    }
+
+    public int checkPosition(int distance) {
+        int mapSize = Kernal.getInstance().getMap().getSize();
+        int ret = position;
+        distance *= (orientation == Orientation.FORWARD ? 1 : -1);
+        ret += distance;
+        if (ret >= mapSize) {
+            ret -= mapSize;
+        } else if (ret < 0) {
+            ret += mapSize;
+        }
+        return ret;
     }
 
     public Orientation getOrientation() {

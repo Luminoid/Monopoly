@@ -1,3 +1,4 @@
+import model.Kernal;
 import view.init.GameBegin;
 import view.init.UserInfoSetting;
 
@@ -8,6 +9,7 @@ public class Main {
     public static void main(String[] args) {
         GameBegin.gameBegin();
         UserInfoSetting.userInfoInput();
-
+        Kernal.getInstance().addCards();
+        Kernal.getInstance().circulate();
     }
 }

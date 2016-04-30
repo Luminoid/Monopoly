@@ -4,10 +4,7 @@ import model.spot.SimpleSpotFactory;
 import model.spot.Spot;
 import model.spot.SpotType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Ethan on 16/4/28.
@@ -33,7 +30,8 @@ public class MapGenerator {
     }
 
     public static int getRandomNumber() {
-        return (int) (Math.random() * 100);
+        Random random = new Random();
+        return random.nextInt(100);
     }
 
     public static void generateLocation() {
@@ -176,7 +174,7 @@ public class MapGenerator {
         Collections.shuffle(spotTypeList);
         for (int i = 0; i < size; i++) {
             Spot spot;
-            if (i % 5 == 0 && !spotTypeList.isEmpty()) {
+            if (i % 5 == 1 && !spotTypeList.isEmpty()) {
                 spot = SimpleSpotFactory.createSpot(spotTypeList.get(0));
                 spotTypeList.remove(0);
             } else {
@@ -186,7 +184,7 @@ public class MapGenerator {
             map.addSpot(spot);
         }
         // Spot name
-        String[] spotNameArr = {"阿拉巴马", "阿拉斯加", "阿利桑那", "阿肯色", "加利福尼亚", "科罗拉多", "康涅狄格", "特拉华",
+        String[] spotLocNameArr = {"阿拉巴马", "阿拉斯加", "阿利桑那", "阿肯色", "加利福尼亚", "科罗拉多", "康涅狄格", "特拉华",
                 "佛罗里达", "乔治亚", "夏威夷", "爱达荷", "伊利诺斯", "印第安纳", "爱荷华", "堪萨斯", "肯塔基", "路易斯安那",
                 "缅因", "马里兰", "马萨诸塞", "密歇根", "明尼苏达", "密西西比", "密苏里", "蒙大拿", "内布拉斯加", "内华达",
                 "新罕布什尔", "新泽西", "新墨西哥", "纽约", "北卡罗来纳", "北达科他", "俄亥俄", "俄克拉荷马", "俄勒冈", "宾夕法尼亚",
@@ -194,10 +192,15 @@ public class MapGenerator {
                 "威斯康辛", "怀俄明",
                 "阿尔伯塔省", "不列颠哥伦比亚省", "马尼托巴省", "纽芬兰与拉布拉多省", "新不伦瑞克省", "新斯科舍省",
                 "安大略省", "爱德华王子岛省", "萨斯喀彻温省", "努纳武特地区", "西北地区", "育空地区",
-                "新南威尔士州", "昆士兰州", "南澳大利亚州", "塔斯马尼亚", "维多利亚州", "西澳大利亚州", "澳大利亚首都领地", "北领地"};
-        List<String> spotNameList = new ArrayList<>(Arrays.asList(spotNameArr));
+                "新南威尔士州", "昆士兰州", "南澳大利亚州", "塔斯马尼亚", "维多利亚州", "西澳大利亚州", "澳大利亚首都领地", "北领地",
+                "巴登—符腾堡州", "巴伐利亚州", "柏林市", "勃兰登堡州", "不来梅市", "汉堡市", "黑森州", "梅克伦堡—前波莫瑞州",
+                "下萨克森州", "北莱茵—威斯特法伦州", "莱茵兰—普法尔茨州", "萨尔州", "萨克森州", "萨克森—安哈特州",
+                "石勒苏益格—荷尔斯泰因州", "图林根州",
+                "伦敦", "罗马", "巴黎", "马德里", "柏林", "伯尔尼", "莫斯科", "斯底哥尔摩", "布鲁塞尔", "哥本哈根", "索非亚",
+                "明斯克", "瓦杜兹", "维也纳", "布拉格", "华沙", "萨拉热窝",};
+        List<String> spotNameList = new ArrayList<>(Arrays.asList(spotLocNameArr));
         map.getSpots().stream().forEach(e -> {
-            e.setName(spotNameList.get(0));
+            e.setLocName(spotNameList.get(0));
             spotNameList.remove(0);
         });
     }

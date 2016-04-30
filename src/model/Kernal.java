@@ -1,9 +1,16 @@
 package model;
 
+import model.card.CardType;
+import model.card.SimpleCardFactory;
 import view.map.MapGenerator;
+import view.menu.MainMenu;
+import view.menu.RoundStartMenu;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Ethan on 16/4/28.
@@ -19,6 +26,7 @@ public class Kernal {
 
     private Kernal(int playerNum) {
         this.playerNum = playerNum;
+        players = new ArrayList<>();
         date = new GregorianCalendar();
         map = MapGenerator.generate();
     }
@@ -37,8 +45,12 @@ public class Kernal {
         }
     }
 
-    public void startRound() {
-
+    public void circulate() {
+        while (!findWinner(players)){
+            RoundStartMenu.displayRoundMenu();
+            players.stream().filter(player -> !player.isBankrupt()).forEach(MainMenu::displayMainMenu);
+            date.add(Calendar.DATE, 1);
+        }
     }
 
     public Map getMap() {
@@ -65,11 +77,22 @@ public class Kernal {
         players.add(player);
     }
 
-    public int getCurrentPlayer() {
-        return currentPlayer;
+    public void addCards(){
+        players.stream().map(Player::getCards).forEach(e -> {
+            for (CardType cardType : CardType.values()){
+                e.put(SimpleCardFactory.createCard(cardType), 10);
+            }
+        });
     }
 
-    public void setCurrentPlayer(int currentPlayer) {
-        this.currentPlayer = currentPlayer;
+    public static boolean findWinner(List<Player> players){
+        List<Player> activePlayers = players.stream().filter(e -> !e.isBankrupt()).collect(Collectors.toList());
+        if (activePlayers.size() == 1){
+            System.out.println(activePlayers.get(0).getName() +" 获胜！");
+            System.out.println("游戏结束");
+            return true;
+        }else {
+            return false;
+        }
     }
 }

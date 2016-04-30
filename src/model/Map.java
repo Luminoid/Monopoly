@@ -9,7 +9,6 @@ import java.util.ArrayList;
  */
 public abstract class Map {
     private ArrayList<Spot> spotList;
-    private Spot StartSpot;
 
     public Map() {
         spotList = new ArrayList<>();
