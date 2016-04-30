@@ -8,9 +8,11 @@ import action.event.EstateEvent;
 import action.event.EventType;
 import action.event.SimpleEventFactory;
 import action.request.YesOrNoRequest;
+import model.Kernal;
 import model.Player;
 import util.EstateAction;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,7 +24,7 @@ public class EstateSpot extends Spot {
     private Player owner;
     private double basePrice;
     private int level;
-//    private String
+    private String streetName;
 
     public EstateSpot(double basePrice) {
         this.typeName = "土地";
@@ -96,6 +98,7 @@ public class EstateSpot extends Spot {
         List<String> spotInfo = new LinkedList<>();
         spotInfo.add("地名：" + this.getLocName());
         spotInfo.add("类型：" + this.typeName);
+        spotInfo.add("街道：" + (this.streetName != null ? this.streetName : "无"));
         spotInfo.add("简介：" + getDescription());
         if (owner != null) {
             spotInfo.add("等级：" + level);
@@ -115,7 +118,21 @@ public class EstateSpot extends Spot {
     }
 
     public double getPassByPrice() {
-        return level * basePrice * 0.1;
+        ArrayList<EstateSpot> adjacentEstate = new ArrayList<>();
+        ArrayList<Spot> spots = Kernal.getInstance().getMap().getSpots();
+        for (int i = 0; i < spots.size(); i++) {
+            if (spots.get(i).getSpotType() == SpotType.EstateSpot) {
+                if (((EstateSpot) (spots.get(i))).getStreetName() != null) {
+                    if (((EstateSpot) (spots.get(i))).getStreetName().equals(streetName)) {
+                        adjacentEstate.add((EstateSpot) (spots.get(i)));
+                    }
+                }
+            }
+        }
+        double price = adjacentEstate.stream().filter(e -> e.getOwner() == owner)
+                .map(e -> e.getLevel() * e.getBasePrice() * 0.05).reduce(0.0, (a, b) -> a + b);
+        price += level * basePrice * 0.05;
+        return price;
     }
 
     public void sell() {
@@ -145,5 +162,13 @@ public class EstateSpot extends Spot {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public String getStreetName() {
+        return streetName;
+    }
+
+    public void setStreetName(String streetName) {
+        this.streetName = streetName;
     }
 }

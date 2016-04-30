@@ -28,7 +28,7 @@ public class MapView {
 
     public static Spot getDistantSpot(Player player, int distance) {
         TuiMap map = (TuiMap) Kernal.getInstance().getMap();
-        Tool.distanceWithOrientation(player, distance);
+        distance = Tool.distanceWithOrientation(player, distance);
         return map.getSpots().get(player.getPosition() + distance);
     }
 

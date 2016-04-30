@@ -1,5 +1,6 @@
 package view.map;
 
+import model.spot.EstateSpot;
 import model.spot.SimpleSpotFactory;
 import model.spot.Spot;
 import model.spot.SpotType;
@@ -197,12 +198,23 @@ public class MapGenerator {
                 "下萨克森州", "北莱茵—威斯特法伦州", "莱茵兰—普法尔茨州", "萨尔州", "萨克森州", "萨克森—安哈特州",
                 "石勒苏益格—荷尔斯泰因州", "图林根州",
                 "伦敦", "罗马", "巴黎", "马德里", "柏林", "伯尔尼", "莫斯科", "斯底哥尔摩", "布鲁塞尔", "哥本哈根", "索非亚",
-                "明斯克", "瓦杜兹", "维也纳", "布拉格", "华沙", "萨拉热窝",};
+                "明斯克", "瓦杜兹", "维也纳", "布拉格", "华沙", "萨拉热窝"};
         List<String> spotNameList = new ArrayList<>(Arrays.asList(spotLocNameArr));
         map.getSpots().stream().forEach(e -> {
             e.setLocName(spotNameList.get(0));
             spotNameList.remove(0);
         });
+        // Spot street
+        String[] spotStreetNameArr = {"亚松森", "罗索", "渥太华", "巴西利亚", "布宜诺斯艾利斯", "利马", "特古西加尔巴",
+                "加拉加斯", "太子港", "基多", "圣菲波哥大", "圣萨尔瓦多", "金斯敦", "圣约翰", "圣地亚哥", "蒙得维的亚",
+                "帕拉马里博", "哈瓦那", "布里奇顿", "贝尔莫潘", "马那瓜", "卡斯特里", "圣何塞", "拿骚", "乔治敦", "西班牙港",
+                "巴拿马城", "危地马拉城", "拉巴斯", "圣多明各", "圣乔治", "墨西哥城"};
+        for (int i = 2; i < map.getSpots().size() - 5; i += 5) {
+            ((EstateSpot) (map.getSpots().get(i))).setStreetName(spotStreetNameArr[(i - 2) / 5]);
+            ((EstateSpot) (map.getSpots().get(i + 1))).setStreetName(spotStreetNameArr[(i - 2) / 5]);
+            ((EstateSpot) (map.getSpots().get(i + 2))).setStreetName(spotStreetNameArr[(i - 2) / 5]);
+            ((EstateSpot) (map.getSpots().get(i + 3))).setStreetName(spotStreetNameArr[(i - 2) / 5]);
+        }
     }
 
     public static TuiMap generate() {

@@ -10,8 +10,11 @@ import java.util.ArrayList;
 public abstract class Map {
     private ArrayList<Spot> spotList;
 
+    private ArrayList<String> streetList;
+
     public Map() {
         spotList = new ArrayList<>();
+        streetList = new ArrayList<>();
     }
 
     public void addSpot(Spot spot) {
@@ -20,6 +23,10 @@ public abstract class Map {
 
     public ArrayList<Spot> getSpots() {
         return spotList;
+    }
+
+    public ArrayList<String> getStreetList() {
+        return streetList;
     }
 
     public int getSize() {

@@ -25,7 +25,7 @@ public class LotterySystem {
 
     public static void drawLottery() {
         lotteryPrize = (Math.random() * 10000) + 5000;
-        if (winningNumber != -1) {
+        if (winningNumber == -1) {
             winningNumber = (int) (Math.random() * 100);
         }
 

@@ -34,10 +34,11 @@ public class MainMenu {
             System.out.println("4 - 查看前后指定步数的具体信息");
             System.out.println("5 - 查看玩家的资产信息");
             System.out.println("6 - 扔骰子");
-            System.out.println("7 - 认输！");
+            System.out.println("7 - 进入股市");
+            System.out.println("8 - 认输！");
             System.out.println("请选择：");
 
-            int choiceNum = TuiInput.readInt(new Scanner(System.in), 0, 7);
+            int choiceNum = TuiInput.readInt(new Scanner(System.in), 0, 8);
             switch (choiceNum) {
                 case 0:
                     MapView.printMapwithPlayer();
@@ -62,6 +63,9 @@ public class MainMenu {
                     opt = false;
                     break;
                 case 7:
+
+                    break;
+                case 8:
                     player.giveUp();
                     opt = false;
                     break;
@@ -139,7 +143,7 @@ public class MainMenu {
         int diceValue = Dice.getInstance().rollDice();
         int step;
         for (step = 0; step < diceValue; step++) {
-            if (MapView.getPlayerSpot(player).getSpotType()== SpotType.BankSpot){
+            if (MapView.getPlayerSpot(player).getSpotType() == SpotType.BankSpot) {
                 MapView.getPlayerSpot(player).passByEvent(player);
             } else if (MapView.getDistantSpot(player, 1).isBlocked()) {
                 MapView.getDistantSpot(player, 1).setBlocked(false);

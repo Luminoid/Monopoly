@@ -2,6 +2,7 @@ package model;
 
 import action.command.CommandType;
 import action.command.FindWinnerCommand;
+import action.command.PromptCommand;
 import action.command.SimpleCommamdFactory;
 import model.card.CardType;
 import util.playerTool;
@@ -47,6 +48,13 @@ public class Kernal {
 
     public void circulate() {
         while (date.before(endDate)) {
+            // Month info
+            if (isEndOfMonth()){
+                LotterySystem.drawLottery();
+                players.stream().forEach(e->e.setDeposit(e.getDeposit()*1.1));
+                PromptCommand command = (PromptCommand) SimpleCommamdFactory.createCommand(CommandType.PROMPT_COMMAND);
+                command.setCommandStr("银行利息已发放");
+            }
             RoundStartMenu.displayRoundMenu();
             for (Iterator<Player> it = players.iterator(); it.hasNext(); ) {
                 Player player = it.next();
@@ -112,5 +120,17 @@ public class Kernal {
                 e.put(cardType, 10);
             }
         });
+    }
+
+    public boolean isEndOfMonth(){
+        int month1 = date.get(Calendar.MONTH);
+        date.add(Calendar.DATE, 1);
+        int month2 = date.get(Calendar.MONTH);
+        date.add(Calendar.DATE, -1);
+        if (month1 != month2){
+            return true;
+        } else{
+            return false;
+        }
     }
 }
