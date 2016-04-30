@@ -10,6 +10,7 @@ public class LotteryCard extends Card {
         this.name = "彩票卡";
         this.description = "使用时可以操作本月的彩票开奖结果";
         this.value = 3;
+        this.cardType = CardType.LOTTERY_CARD;
     }
 
     @Override

@@ -1,5 +1,8 @@
 package model.card;
 
+import action.command.CommandType;
+import action.command.PromptCommand;
+import action.command.SimpleCommamdFactory;
 import model.Player;
 
 /**
@@ -10,10 +13,14 @@ public class ReverseCard extends Card {
         this.name = "转向卡";
         this.description = "使目标掉转方向";
         this.value = 2;
+        this.cardType = CardType.REVERSE_CARD;
     }
 
     @Override
     public boolean use(Player player) {
-        return false;
+        player.setOrientation();
+        PromptCommand command = (PromptCommand) SimpleCommamdFactory.createCommand(CommandType.PROMPT_COMMAND);
+        command.setCommandStr("您使用了转向卡");
+        return true;
     }
 }

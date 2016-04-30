@@ -4,6 +4,8 @@ import model.Dice;
 import model.Kernal;
 import model.Player;
 import model.card.Card;
+import model.card.CardType;
+import model.card.SimpleCardFactory;
 import model.spot.Spot;
 import util.PlayerOrientation;
 import view.map.MapView;
@@ -68,23 +70,35 @@ public class MainMenu {
     }
 
     private static void displayCardMenu(Player player) {
-        ArrayList<Card> usableCards = new ArrayList<>(player.getCards().keySet());
-        int cardNum = usableCards.size();
-        System.out.println("您现在拥有的道具如下:");
-        for (int i = 0; i < cardNum; i++) {
-            TuiOutput.printTable(i + "、" + usableCards.get(i).getName() + " × " +
-                    player.getCards().get(usableCards.get(i)) + " ");
+        ArrayList<Card> usableCards = new ArrayList<>();
+        for (CardType cardType : player.getCards().keySet()) {
+            usableCards.add(SimpleCardFactory.createCard(cardType));
         }
-        System.out.println("\n请输入您想要使用的卡片编号<输入h获得帮助，输入x返回上一层：");
-        Scanner scanner = new Scanner(System.in);
-        int choice = TuiInput.readCard(scanner, cardNum);
-        if (choice == -1) {
-            // Do nothing
-        } else if (choice == 99) {
-            usableCards.stream().
-                    map(e -> (e.getName() + "：" + e.getDescription())).forEach(System.out::println);
+        int cardNum = usableCards.size();
+        if (cardNum == 0) {
+            System.out.println("您现在没有道具卡可以使用");
         } else {
-            usableCards.get(choice).use(player);
+            System.out.println("您现在拥有的道具如下:");
+            for (int i = 0; i < cardNum; i++) {
+                TuiOutput.printTable(i + "、" + usableCards.get(i).getName() + " × " +
+                        player.getCards().get(usableCards.get(i).getCardType()) + " ");
+            }
+            System.out.println("\n请输入您想要使用的卡片编号<输入h获得帮助，输入x返回上一层>：");
+            Scanner scanner = new Scanner(System.in);
+            int choice = TuiInput.readCard(scanner, cardNum);
+            if (choice == -1) {
+                // Do nothing
+            } else if (choice == 99) {
+                usableCards.stream().
+                        map(e -> (e.getName() + "：\t" + e.getDescription())).forEach(System.out::println);
+            } else {
+                Card usedCard = usableCards.get(choice);
+                if (usedCard.use(player)) {
+                    player.useCard(usedCard.getCardType());
+                } else {
+                    System.out.println("本情形不能使用该卡片");
+                }
+            }
         }
     }
 

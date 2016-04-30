@@ -22,5 +22,6 @@ public abstract class ControlledDiceRequest implements Request<Integer> {
 
     public void setQuestionStr(String questionStr) {
         this.questionStr = questionStr;
+        action();
     }
 }

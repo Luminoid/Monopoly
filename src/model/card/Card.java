@@ -1,7 +1,6 @@
 package model.card;
 
 import model.Player;
-import model.spot.SpotType;
 
 /**
  * Created by Ethan on 16/4/27.
@@ -9,7 +8,7 @@ import model.spot.SpotType;
 public abstract class Card {
     protected String name;
     protected String description;
-    protected SpotType spotType;
+    protected CardType cardType;
     protected int value;
 
     public abstract boolean use(Player player);
@@ -36,5 +35,13 @@ public abstract class Card {
 
     public void setValue(int value) {
         this.value = value;
+    }
+
+    public CardType getCardType() {
+        return cardType;
+    }
+
+    public void setCardType(CardType cardType) {
+        this.cardType = cardType;
     }
 }

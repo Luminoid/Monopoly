@@ -1,8 +1,8 @@
 package model.spot;
 
 import action.event.BonusCardEvent;
-import action.command.CommandType;
-import action.command.SimpleCommamdFactory;
+import action.event.EventType;
+import action.event.SimpleEventFactory;
 import model.Player;
 
 /**
@@ -17,7 +17,7 @@ public class BonusCardSpot extends Spot {
 
     @Override
     public void arriveEvent(Player player) {
-        BonusCardEvent event = (BonusCardEvent) SimpleCommamdFactory.createCommand(CommandType.BONUS_CARD_EVENT);
+        BonusCardEvent event = (BonusCardEvent) SimpleEventFactory.createEvent(EventType.BONUS_CARD_EVENT);
         event.toggle(player);
     }
 

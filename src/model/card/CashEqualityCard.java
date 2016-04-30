@@ -6,8 +6,6 @@ import action.command.SimpleCommamdFactory;
 import model.Kernal;
 import model.Player;
 
-import java.util.stream.Stream;
-
 /**
  * Created by Ethan on 16/4/27.
  */
@@ -16,6 +14,7 @@ public class CashEqualityCard extends Card {
         this.name = "均富卡";
         this.description = "将所有人的现金平均分配";
         this.value = 8;
+        this.cardType = CardType.CASH_EQUALITY_CARD;
     }
 
     @Override

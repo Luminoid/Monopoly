@@ -4,7 +4,6 @@ import action.command.CommandType;
 import action.command.PromptCommand;
 import action.command.SimpleCommamdFactory;
 import model.Player;
-import model.card.Card;
 import model.card.CardType;
 import model.card.SimpleCardFactory;
 
@@ -16,10 +15,10 @@ import java.util.ArrayList;
 public class BonusCardEvent extends Event {
     @Override
     public void toggle(Player player) {
-        Card card = SimpleCardFactory.createCard(generateCard());
-        player.addCard(card);
+        CardType cardType = generateCard();
+        player.addCard(cardType);
         PromptCommand command = (PromptCommand) SimpleCommamdFactory.createCommand(CommandType.PROMPT_COMMAND);
-        command.setCommandStr(player.getName() + " 获得一张" + card.getName());
+        command.setCommandStr(player.getName() + " 获得一张" + SimpleCardFactory.createCard(cardType).getName());
     }
 
     private static CardType generateCard() {

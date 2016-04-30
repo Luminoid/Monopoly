@@ -4,7 +4,6 @@ import action.command.CommandType;
 import action.command.FindWinnerCommand;
 import action.command.SimpleCommamdFactory;
 import model.card.CardType;
-import model.card.SimpleCardFactory;
 import view.map.MapGenerator;
 import view.menu.MainMenu;
 import view.menu.RoundStartMenu;
@@ -82,7 +81,7 @@ public class Kernal {
     public void addCards() {
         players.stream().map(Player::getCards).forEach(e -> {
             for (CardType cardType : CardType.values()) {
-                e.put(SimpleCardFactory.createCard(cardType), 10);
+                e.put(cardType, 10);
             }
         });
     }

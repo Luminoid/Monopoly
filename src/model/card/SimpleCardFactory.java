@@ -7,25 +7,25 @@ public class SimpleCardFactory {
     public static Card createCard(CardType cardType) {
         Card card = null;
         switch (cardType) {
-            case BarricadeCard:
+            case BARRICADE_CARD:
                 card = new BarricadeCard();
                 break;
-            case CashEqualityCard:
+            case CASH_EQUALITY_CARD:
                 card = new CashEqualityCard();
                 break;
-            case ControlledDiceCard:
+            case CONTROLLED_DICE_CARD:
                 card = new ControlledDiceCard();
                 break;
-            case LotteryCard:
+            case LOTTERY_CARD:
                 card = new LotteryCard();
                 break;
-            case PurchaseLandCard:
+            case PURCHASE_LAND_CARD:
                 card = new PurchaseLandCard();
                 break;
-            case ReverseCard:
+            case REVERSE_CARD:
                 card = new ReverseCard();
                 break;
-            case StayCard:
+            case STAY_CARD:
                 card = new StayCard();
                 break;
         }

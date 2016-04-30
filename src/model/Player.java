@@ -4,7 +4,7 @@ import action.command.BankruptCommand;
 import action.command.CommandType;
 import action.command.SellEstateCommand;
 import action.command.SimpleCommamdFactory;
-import model.card.Card;
+import model.card.CardType;
 import model.spot.EstateSpot;
 import util.PlayerOrientation;
 
@@ -28,7 +28,7 @@ public class Player {
     private double deposit;
     private int ticket;
     private ArrayList<EstateSpot> houses;
-    private Hashtable<Card, Integer> cards;
+    private Hashtable<CardType, Integer> cards;
     private HashMap<Stock, Integer> stocks;
     private boolean isBankrupt;
 
@@ -41,7 +41,7 @@ public class Player {
         this.deposit = 0;
         this.ticket = 0;
         this.houses = new ArrayList<>();
-        this.cards = new Hashtable<Card, Integer>();
+        this.cards = new Hashtable<CardType, Integer>();
         this.stocks = new HashMap<Stock, Integer>();
         this.isBankrupt = false;
     }
@@ -159,8 +159,8 @@ public class Player {
         return orientation;
     }
 
-    public void setOrientation(PlayerOrientation orientation) {
-        this.orientation = orientation;
+    public void setOrientation() {
+        orientation = (orientation == PlayerOrientation.FORWARD ? PlayerOrientation.BACKWORD : PlayerOrientation.FORWARD);
     }
 
     public double getCash() {
@@ -195,12 +195,16 @@ public class Player {
         houses.add(house);
     }
 
-    public Hashtable<Card, Integer> getCards() {
+    public Hashtable<CardType, Integer> getCards() {
         return cards;
     }
 
-    public void addCard(Card card) {
-        cards.put(card, cards.get(card) + 1);
+    public void addCard(CardType cardType) {
+        cards.put(cardType, cards.get(cardType) + 1);
+    }
+
+    public void useCard(CardType cardType) {
+        cards.put(cardType, cards.get(cardType) - 1);
     }
 
     public Map<Stock, Integer> getStocks() {
