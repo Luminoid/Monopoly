@@ -17,6 +17,10 @@ public abstract class Spot {
 
     public abstract void arriveEvent(Player player);
 
+    public void passByEvent(Player player){
+        // Bank Spot
+    }
+
     public List<String> getSpotInfo() {
         List<String> spotInfo = new LinkedList<>();
         spotInfo.add("地名：" + locName);

@@ -23,6 +23,9 @@ public class PurchaseLandCard extends Card {
         EstateSpot spot = (EstateSpot) MapView.getPlayerSpot(player);
         if (spot.getOwner() != player && player.getCash() >= spot.getPurchasingPrice()) {
             player.pay(spot.getPurchasingPrice());
+            ((EstateSpot) MapView.getPlayerSpot(player)).getOwner().addCash(spot.getPurchasingPrice());
+            ((EstateSpot) MapView.getPlayerSpot(player)).getOwner().getHouses().remove(spot);
+            player.getHouses().add(spot);
             spot.setOwner(player);
             PromptCommand command = (PromptCommand) SimpleCommamdFactory.createCommand(CommandType.PROMPT_COMMAND);
             command.setCommandStr(player.getName() + " 花费¥" + spot.getPurchasingPrice() + "买下了" + spot.getLocName() + "的房子");

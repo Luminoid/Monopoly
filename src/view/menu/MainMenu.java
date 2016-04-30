@@ -4,9 +4,9 @@ import model.Dice;
 import model.Kernal;
 import model.Player;
 import model.card.Card;
-import model.card.CardType;
 import model.card.SimpleCardFactory;
 import model.spot.Spot;
+import model.spot.SpotType;
 import util.PlayerOrientation;
 import view.map.MapView;
 import view.util.TuiInput;
@@ -71,9 +71,7 @@ public class MainMenu {
 
     private static void displayCardMenu(Player player) {
         ArrayList<Card> usableCards = new ArrayList<>();
-        for (CardType cardType : player.getCards().keySet()) {
-            usableCards.add(SimpleCardFactory.createCard(cardType));
-        }
+        player.getCards().keySet().stream().forEach(e -> usableCards.add(SimpleCardFactory.createCard(e)));
         int cardNum = usableCards.size();
         if (cardNum == 0) {
             System.out.println("您现在没有道具卡可以使用");
@@ -84,8 +82,7 @@ public class MainMenu {
                         player.getCards().get(usableCards.get(i).getCardType()) + " ");
             }
             System.out.println("\n请输入您想要使用的卡片编号<输入h获得帮助，输入x返回上一层>：");
-            Scanner scanner = new Scanner(System.in);
-            int choice = TuiInput.readCard(scanner, cardNum);
+            int choice = TuiInput.readCard(new Scanner(System.in), cardNum);
             if (choice == -1) {
                 // Do nothing
             } else if (choice == 99) {
@@ -103,9 +100,9 @@ public class MainMenu {
     }
 
     private static void showWarning(Player player) {
-        for (int i = 1; i <= 10; i++){
-            if (MapView.getDistantSpot(player, i).isBlocked()){
-                System.out.println("前方"+i+"步内有路障");
+        for (int i = 1; i <= 10; i++) {
+            if (MapView.getDistantSpot(player, i).isBlocked()) {
+                System.out.println("前方" + i + "步内有路障");
             }
         }
     }
@@ -139,16 +136,20 @@ public class MainMenu {
     }
 
     private static void advance(Player player) {
-        int step = Dice.getInstance().rollDice();
-        System.out.println("玩家 " + player.getName() + " 前进了" + step + "步");
-        for (int i = 0; i < step; i++) {
-            if (MapView.getDistantSpot(player, 1).isBlocked()){
+        int diceValue = Dice.getInstance().rollDice();
+        int step;
+        for (step = 0; step < diceValue; step++) {
+            if (MapView.getPlayerSpot(player).getSpotType()== SpotType.BankSpot){
+                MapView.getPlayerSpot(player).passByEvent(player);
+            } else if (MapView.getDistantSpot(player, 1).isBlocked()) {
                 MapView.getDistantSpot(player, 1).setBlocked(false);
                 player.move();
+                step++;
                 break;
             }
             player.move();
         }
+        System.out.println("玩家 " + player.getName() + " 前进了" + step + "步");
         MapView.getPlayerSpot(player).arriveEvent(player);
     }
 }

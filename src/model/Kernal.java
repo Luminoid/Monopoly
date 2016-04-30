@@ -48,23 +48,23 @@ public class Kernal {
     public void circulate() {
         while (date.before(endDate)) {
             RoundStartMenu.displayRoundMenu();
-            for (Iterator<Player> it = players.iterator(); it.hasNext();){
+            for (Iterator<Player> it = players.iterator(); it.hasNext(); ) {
                 Player player = it.next();
-                if (players.size()==1){
+                if (players.size() == 1) {
                     FindWinnerCommand command = (FindWinnerCommand) SimpleCommamdFactory.createCommand(CommandType.FIND_WINNER_COMMAND);
                     command.setCommandStr(player.getName());
                     return;
                 }
                 MainMenu.displayMainMenu(player);
-                if (player.isBankrupt()){
+                if (player.isBankrupt()) {
                     it.remove();
                 }
             }
             date.add(Calendar.DATE, 1);
         }
         // Time is over
-        Player winner = players.stream().max((a, b)-> {
-            if (playerTool.getAsset(a)-playerTool.getAsset(b)>0){
+        Player winner = players.stream().max((a, b) -> {
+            if (playerTool.getAsset(a) - playerTool.getAsset(b) > 0) {
                 return 1;
             } else {
                 return -1;

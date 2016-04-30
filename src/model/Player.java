@@ -37,7 +37,7 @@ public class Player {
         this.orientation = PlayerOrientation.FORWARD;
         this.cash = cash;
         this.deposit = 0;
-        this.ticket = 0;
+        this.ticket = 20;
         this.houses = new ArrayList<>();
         this.cards = new Hashtable<CardType, Integer>();
         this.stocks = new HashMap<Stock, Integer>();
@@ -169,7 +169,7 @@ public class Player {
         return cash;
     }
 
-    public void addCash(double cash){
+    public void addCash(double cash) {
         this.cash += cash;
     }
 

@@ -24,11 +24,11 @@ public class BarricadeCard extends Card {
         IntRangeRequest request = (IntRangeRequest) SimpleCommamdFactory.createCommand(CommandType.INT_RANGE_REQUEST);
         request.setFloor(-8).setCeiling(+8).setQuestionStr("您正在使用路障卡，请输入您要放置路障的位置(-8~8)：");
         PromptCommand command = (PromptCommand) SimpleCommamdFactory.createCommand(CommandType.PROMPT_COMMAND);
-        if (MapView.getDistantSpot(player,request.getAnswer()).isBlocked()){
+        if (MapView.getDistantSpot(player, request.getAnswer()).isBlocked()) {
             command.setCommandStr("该位置已有路障");
             return false;
         } else {
-            MapView.getDistantSpot(player,request.getAnswer()).setBlocked(true);
+            MapView.getDistantSpot(player, request.getAnswer()).setBlocked(true);
             command.setCommandStr("已成功放置路障");
             return true;
         }

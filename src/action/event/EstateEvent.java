@@ -26,7 +26,7 @@ public class EstateEvent extends Event {
                 break;
             case LEVEL_UP:
                 command.setCommandStr(player.getName() + " 已花¥" + Tool.formatMoney(getFee()) + "升级" +
-                        getSpot().getLocName() + "至" + getSpot().getLevel()+"级");
+                        getSpot().getLocName() + "至" + getSpot().getLevel() + "级");
                 break;
             case PAY_FEE:
                 command.setCommandStr(player.getName() + " 路过" + getSpot().getLocName() + "，支付¥" +

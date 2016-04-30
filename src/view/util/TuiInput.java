@@ -22,6 +22,17 @@ public class TuiInput {
         }
     }
 
+    public static double readDouble(Scanner scanner) {
+        while (true) {
+            try {
+                System.out.print(">> ");
+                return Double.parseDouble(scanner.nextLine().trim());
+            } catch (NumberFormatException ex) {
+                System.out.println("格式错误，请输入整数：");
+            }
+        }
+    }
+
     public static int readCard(Scanner scanner, int cardNum) {
         while (true) {
             try {

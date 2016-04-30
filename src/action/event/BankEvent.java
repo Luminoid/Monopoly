@@ -1,6 +1,7 @@
 package action.event;
 
 import model.Player;
+import view.menu.BankMenu;
 
 /**
  * Created by Ethan on 16/4/30.
@@ -8,6 +9,6 @@ import model.Player;
 public class BankEvent extends Event {
     @Override
     public void toggle(Player player) {
-
+        BankMenu.displayBankMenu(player);
     }
 }

@@ -22,6 +22,7 @@ public class EstateSpot extends Spot {
     private Player owner;
     private double basePrice;
     private int level;
+//    private String
 
     public EstateSpot(double basePrice) {
         this.typeName = "土地";

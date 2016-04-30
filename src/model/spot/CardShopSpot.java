@@ -1,5 +1,8 @@
 package model.spot;
 
+import action.event.CardShopEvent;
+import action.event.EventType;
+import action.event.SimpleEventFactory;
 import model.Player;
 
 /**
@@ -14,6 +17,7 @@ public class CardShopSpot extends Spot {
 
     @Override
     public void arriveEvent(Player player) {
-
+        CardShopEvent event = (CardShopEvent) SimpleEventFactory.createEvent(EventType.CARD_SHOP_EVENT);
+        event.toggle(player);
     }
 }

@@ -18,22 +18,22 @@ public class LotterySystem {
     private static double lotteryPrize;
     private static int winningNumber;
 
-    public static void buyLottery(Player player, int num){
+    public static void buyLottery(Player player, int num) {
         lotteryRecord.put(player, num);
         player.pay(100);
     }
 
-    public static void drawLottery(){
-        lotteryPrize = (Math.random()*10000) + 5000;
-        if (winningNumber != -1){
-            winningNumber = (int)(Math.random()*100);
+    public static void drawLottery() {
+        lotteryPrize = (Math.random() * 10000) + 5000;
+        if (winningNumber != -1) {
+            winningNumber = (int) (Math.random() * 100);
         }
 
-        List<Player> lotteryWinners = lotteryRecord.entrySet().stream().filter(e -> e.getValue()==winningNumber).
+        List<Player> lotteryWinners = lotteryRecord.entrySet().stream().filter(e -> e.getValue() == winningNumber).
                 map(Map.Entry::getKey).distinct().collect(Collectors.toList());
         int winnerNum = lotteryWinners.size();
         PromptCommand command = (PromptCommand) SimpleCommamdFactory.createCommand(CommandType.PROMPT_COMMAND);
-        if (winnerNum == 0){
+        if (winnerNum == 0) {
             command.setCommandStr("没有人中奖");
         } else {
             double lotteryPrizePortion = lotteryPrize / winnerNum;
@@ -45,7 +45,7 @@ public class LotterySystem {
         clearRecord();
     }
 
-    public static void clearRecord(){
+    public static void clearRecord() {
         lotteryRecord.clear();
         winningNumber = -1;
     }
