@@ -1,26 +1,19 @@
 package model.spot;
 
+import model.Player;
+
 /**
  * Created by Ethan on 16/4/28.
  */
 public class CardShopSpot extends Spot {
-    @Override
-    public void arriveEvent() {
-
+    public CardShopSpot() {
+        this.typeName = "道具店";
+        this.description = "可以使用点券在道具店购买道具";
+        this.spotType = SpotType.CardShopSpot;
     }
 
     @Override
-    public SpotType getSpotType() {
-        return SpotType.CardShopSpot;
-    }
+    public void arriveEvent(Player player) {
 
-    @Override
-    public String getTypeName() {
-        return "道具店";
-    }
-
-    @Override
-    public String getSpotDescription() {
-        return "可以使用点券在道具店购买道具";
     }
 }

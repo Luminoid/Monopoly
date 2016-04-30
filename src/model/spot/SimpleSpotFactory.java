@@ -1,5 +1,7 @@
 package model.spot;
 
+import java.util.Random;
+
 /**
  * Created by Ethan on 16/4/28.
  */
@@ -23,7 +25,8 @@ public class SimpleSpotFactory {
                 spot = new EmptySpot();
                 break;
             case EstateSpot:
-                spot = new EstateSpot();
+                double basePrice = (new Random().nextInt(1500) + 500);
+                spot = new EstateSpot(basePrice);
                 break;
             case LotterySpot:
                 spot = new LotterySpot();

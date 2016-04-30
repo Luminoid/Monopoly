@@ -1,26 +1,19 @@
 package model.spot;
 
+import model.Player;
+
 /**
  * Created by Ethan on 16/4/28.
  */
 public class NewsSpot extends Spot {
-    @Override
-    public void arriveEvent() {
-
+    public NewsSpot() {
+        this.typeName = "新闻";
+        this.description = "随机播报一个新闻";
+        this.spotType = SpotType.NewsSpot;
     }
 
     @Override
-    public SpotType getSpotType() {
-        return SpotType.NewsSpot;
-    }
+    public void arriveEvent(Player player) {
 
-    @Override
-    public String getTypeName() {
-        return "新闻";
-    }
-
-    @Override
-    public String getSpotDescription() {
-        return "随机播报一个新闻";
     }
 }

@@ -3,15 +3,16 @@ package view.menu;
 import model.Dice;
 import model.Kernal;
 import model.Player;
+import model.card.Card;
 import model.spot.Spot;
-import util.Orientation;
+import util.PlayerOrientation;
 import view.map.MapView;
 import view.util.TuiInput;
 import view.util.TuiOutput;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Ethan on 16/4/29.
@@ -19,9 +20,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MainMenu {
     public static void displayMainMenu(Player player) {
         boolean opt = true;
-        while (opt){
+        while (opt) {
             System.out.println("-----------------------------------------------------------------");
-            String orientationStr = player.getOrientation().equals(Orientation.FORWARD) ? "顺时针" : "逆时针";
+            String orientationStr = player.getOrientation().equals(PlayerOrientation.FORWARD) ? "顺时针" : "逆时针";
             System.out.println("现在是玩家 " + player.getName() + " 的操作时间，您的前进方向是" + orientationStr + "。");
             System.out.println("您现在可以执行如下操作：");
             System.out.println("0 - 查看地图");
@@ -67,11 +68,24 @@ public class MainMenu {
     }
 
     private static void displayCardMenu(Player player) {
+        ArrayList<Card> usableCards = new ArrayList<>(player.getCards().keySet());
+        int cardNum = usableCards.size();
         System.out.println("您现在拥有的道具如下:");
-        AtomicInteger index = new AtomicInteger();
-        player.getCards().entrySet().stream().map(e -> (e.getKey().getName() + " × "+ e.getValue())).forEach(str ->
-                TuiOutput.printTable(index.getAndIncrement() +"、"+ str+" "));
+        for (int i = 0; i < cardNum; i++) {
+            TuiOutput.printTable(i + "、" + usableCards.get(i).getName() + " × " +
+                    player.getCards().get(usableCards.get(i)) + " ");
+        }
         System.out.println("\n请输入您想要使用的卡片编号<输入h获得帮助，输入x返回上一层：");
+        Scanner scanner = new Scanner(System.in);
+        int choice = TuiInput.readCard(scanner, cardNum);
+        if (choice == -1) {
+            // Do nothing
+        } else if (choice == 99) {
+            usableCards.stream().
+                    map(e -> (e.getName() + "：" + e.getDescription())).forEach(System.out::println);
+        } else {
+            usableCards.get(choice).use(player);
+        }
     }
 
     private static void showWarning(Player player) {
@@ -99,19 +113,19 @@ public class MainMenu {
             double estateValue =
                     e.getHouses().stream().map(house -> house.getBasePrice() * house.getLevel()).reduce(0.0, (a, b) -> a + b);
             info[4] = String.format("%.1f", estateValue);
-            info[5] = String.format("%.1f", e.getCash()+e.getDeposit()+estateValue);
+            info[5] = String.format("%.1f", e.getCash() + e.getDeposit() + estateValue);
 
             Arrays.asList(info).stream().forEach(TuiOutput::printTable);
             System.out.println();
         });
     }
 
-    private static void advance(Player player){
+    private static void advance(Player player) {
         int step = Dice.getInstance().rollDice();
-        System.out.println("玩家 "+player.getName()+" 前进了" +step+"步");
-        for (int i = 0; i < step; i++){
+        System.out.println("玩家 " + player.getName() + " 前进了" + step + "步");
+        for (int i = 0; i < step; i++) {
             player.move();
         }
-        MapView.getPlayerSpot(player).arriveEvent();
+        MapView.getPlayerSpot(player).arriveEvent(player);
     }
 }

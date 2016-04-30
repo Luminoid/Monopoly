@@ -1,26 +1,24 @@
 package model.spot;
 
+import action.event.BonusCardEvent;
+import action.command.CommandType;
+import action.command.SimpleCommamdFactory;
+import model.Player;
+
 /**
  * Created by Ethan on 16/4/28.
  */
 public class BonusCardSpot extends Spot {
-    @Override
-    public void arriveEvent() {
-
+    public BonusCardSpot() {
+        this.typeName = "赠送道具点";
+        this.description = "随机得到一个道具";
+        this.spotType = SpotType.BonusCardSpot;
     }
 
     @Override
-    public SpotType getSpotType() {
-        return SpotType.BonusCardSpot;
+    public void arriveEvent(Player player) {
+        BonusCardEvent event = (BonusCardEvent) SimpleCommamdFactory.createCommand(CommandType.BONUS_CARD_EVENT);
+        event.toggle(player);
     }
 
-    @Override
-    public String getTypeName() {
-        return "赠送道具点";
-    }
-
-    @Override
-    public String getSpotDescription() {
-        return "随机得到一个道具";
-    }
 }

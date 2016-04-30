@@ -1,36 +1,19 @@
 package model.spot;
 
-import java.util.LinkedList;
-import java.util.List;
+import model.Player;
 
 /**
  * Created by Ethan on 16/4/28.
  */
 public class EmptySpot extends Spot {
-    @Override
-    public void arriveEvent() {
-
+    public EmptySpot() {
+        this.typeName = "空地";
+        this.description = "无事发生";
+        this.spotType = SpotType.EmptySpot;
     }
 
     @Override
-    public SpotType getSpotType() {
-        return SpotType.EmptySpot;
-    }
-
-    @Override
-    public String getTypeName() {
-        return "空地";
-    }
-
-    @Override
-    public String getSpotDescription() {
-        return "";
-    }
-
-    public List<String> getSpotInfo() {
-        List<String> spotInfo = new LinkedList<>();
-        spotInfo.add("地名：" + this.getLocName());
-        spotInfo.add("类型：" + getTypeName());
-        return spotInfo;
+    public void arriveEvent(Player player) {
+        // Nothing
     }
 }

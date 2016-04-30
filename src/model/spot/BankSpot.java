@@ -1,27 +1,19 @@
 package model.spot;
 
+import model.Player;
+
 /**
  * Created by Ethan on 16/4/28.
  */
 public class BankSpot extends Spot {
-    @Override
-    public void arriveEvent() {
-
+    public BankSpot() {
+        this.typeName = "银行";
+        this.description = "存取钱";
+        this.spotType = SpotType.BankSpot;
     }
 
     @Override
-    public SpotType getSpotType() {
-        return SpotType.BankSpot;
-    }
+    public void arriveEvent(Player player) {
 
-    @Override
-    public String getTypeName() {
-        return "银行";
     }
-
-    @Override
-    public String getSpotDescription() {
-        return "存取钱";
-    }
-
 }

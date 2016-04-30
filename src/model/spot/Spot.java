@@ -1,5 +1,7 @@
 package model.spot;
 
+import model.Player;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,21 +10,17 @@ import java.util.List;
  */
 public abstract class Spot {
     private String locName;
-    private String typeName;
+    protected String typeName;
+    protected String description;
+    protected SpotType spotType;
 
-    public abstract void arriveEvent();
-
-    public abstract SpotType getSpotType();
-
-    public abstract String getTypeName();
-
-    public abstract String getSpotDescription();
+    public abstract void arriveEvent(Player player);
 
     public List<String> getSpotInfo() {
         List<String> spotInfo = new LinkedList<>();
         spotInfo.add("地名：" + locName);
-        spotInfo.add("类型：" + getTypeName());
-        spotInfo.add("简介：" + getSpotDescription());
+        spotInfo.add("类型：" + typeName);
+        spotInfo.add("简介：" + description);
         return spotInfo;
     }
 
@@ -32,5 +30,17 @@ public abstract class Spot {
 
     public void setLocName(String locName) {
         this.locName = locName;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public SpotType getSpotType() {
+        return spotType;
     }
 }

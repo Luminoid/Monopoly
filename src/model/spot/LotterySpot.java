@@ -1,26 +1,20 @@
 package model.spot;
 
+import model.Player;
+
 /**
  * Created by Ethan on 16/4/29.
  */
 public class LotterySpot extends Spot {
-    @Override
-    public void arriveEvent() {
-
+    public LotterySpot() {
+        this.typeName = "彩票点";
+        this.description = "买彩票";
+        this.spotType = SpotType.LotterySpot;
     }
 
     @Override
-    public SpotType getSpotType() {
-        return SpotType.LotterySpot;
+    public void arriveEvent(Player player) {
+
     }
 
-    @Override
-    public String getTypeName() {
-        return "彩票点";
-    }
-
-    @Override
-    public String getSpotDescription() {
-        return "买彩票";
-    }
 }

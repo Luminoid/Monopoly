@@ -10,7 +10,8 @@ public class Dice {
     boolean isControlled;
     private static Dice dice;
 
-    private Dice() {}
+    private Dice() {
+    }
 
     public static synchronized Dice getInstance() {
         if (dice == null) {
@@ -19,13 +20,13 @@ public class Dice {
         return dice;
     }
 
-    public int rollDice(){
-        if (isControlled){
+    public int rollDice() {
+        if (isControlled) {
             isControlled = false;
             return value;
         } else {
             Random random = new Random();
-            return (random.nextInt(6)+1);
+            return (random.nextInt(6) + 1);
         }
     }
 
