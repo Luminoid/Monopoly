@@ -3,9 +3,12 @@ package model;
 import action.command.CommandType;
 import action.command.FindWinnerCommand;
 import action.command.PromptCommand;
-import action.command.SimpleCommamdFactory;
+import action.command.SimpleCommandFactory;
 import model.card.CardType;
-import util.playerTool;
+import model.stock.StockGenerator;
+import model.stock.StockMarket;
+import util.DateTool;
+import util.PlayerTool;
 import view.map.MapGenerator;
 import view.menu.MainMenu;
 import view.menu.RoundStartMenu;
@@ -15,32 +18,34 @@ import java.util.*;
 /**
  * Created by Ethan on 16/4/28.
  */
-public class Kernal {
-    private Map map;
-    private GregorianCalendar date;
-    private GregorianCalendar endDate;
+public class Kernel {
     private int playerNum;
     private List<Player> players;
+    private GregorianCalendar date;
+    private GregorianCalendar endDate;
+    private Map map;
+    private StockMarket stockMarket;
 
-    private volatile static Kernal uniqueInstance;
+    private volatile static Kernel uniqueInstance;
 
-    private Kernal(int playerNum) {
+    private Kernel(int playerNum) {
         this.playerNum = playerNum;
         players = new ArrayList<>();
         date = new GregorianCalendar();
         endDate = new GregorianCalendar();
         map = MapGenerator.generate();
+        stockMarket = StockGenerator.generate();
     }
 
-    public static Kernal getInstance() {
+    public static Kernel getInstance() {
         return uniqueInstance;
     }
 
     public static void createInstance(int playerNum) {
         if (uniqueInstance == null) {
-            synchronized (Kernal.class) {
+            synchronized (Kernel.class) {
                 if (uniqueInstance == null) {
-                    uniqueInstance = new Kernal(playerNum);
+                    uniqueInstance = new Kernel(playerNum);
                 }
             }
         }
@@ -49,17 +54,20 @@ public class Kernal {
     public void circulate() {
         while (date.before(endDate)) {
             // Month info
-            if (isEndOfMonth()){
+            if (DateTool.isEndOfMonth(date)) {
                 LotterySystem.drawLottery();
-                players.stream().forEach(e->e.setDeposit(e.getDeposit()*1.1));
-                PromptCommand command = (PromptCommand) SimpleCommamdFactory.createCommand(CommandType.PROMPT_COMMAND);
+                players.stream().forEach(e -> e.setDeposit(e.getDeposit() * 1.1));
+                PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
                 command.setCommandStr("银行利息已发放");
+            }
+            if (DateTool.isWeekday(date)) {
+                stockMarket.open();
             }
             RoundStartMenu.displayRoundMenu();
             for (Iterator<Player> it = players.iterator(); it.hasNext(); ) {
                 Player player = it.next();
                 if (players.size() == 1) {
-                    FindWinnerCommand command = (FindWinnerCommand) SimpleCommamdFactory.createCommand(CommandType.FIND_WINNER_COMMAND);
+                    FindWinnerCommand command = (FindWinnerCommand) SimpleCommandFactory.createCommand(CommandType.FIND_WINNER_COMMAND);
                     command.setCommandStr(player.getName());
                     return;
                 }
@@ -72,18 +80,22 @@ public class Kernal {
         }
         // Time is over
         Player winner = players.stream().max((a, b) -> {
-            if (playerTool.getAsset(a) - playerTool.getAsset(b) > 0) {
+            if (PlayerTool.getAsset(a) - PlayerTool.getAsset(b) > 0) {
                 return 1;
             } else {
                 return -1;
             }
         }).get();
-        FindWinnerCommand command = (FindWinnerCommand) SimpleCommamdFactory.createCommand(CommandType.FIND_WINNER_COMMAND);
+        FindWinnerCommand command = (FindWinnerCommand) SimpleCommandFactory.createCommand(CommandType.FIND_WINNER_COMMAND);
         command.setCommandStr(winner.getName());
     }
 
     public Map getMap() {
         return map;
+    }
+
+    public StockMarket getStockMarket() {
+        return stockMarket;
     }
 
     public GregorianCalendar getDate() {
@@ -120,17 +132,5 @@ public class Kernal {
                 e.put(cardType, 10);
             }
         });
-    }
-
-    public boolean isEndOfMonth(){
-        int month1 = date.get(Calendar.MONTH);
-        date.add(Calendar.DATE, 1);
-        int month2 = date.get(Calendar.MONTH);
-        date.add(Calendar.DATE, -1);
-        if (month1 != month2){
-            return true;
-        } else{
-            return false;
-        }
     }
 }

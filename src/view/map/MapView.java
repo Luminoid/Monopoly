@@ -1,10 +1,10 @@
 package view.map;
 
-import model.Kernal;
+import model.Kernel;
 import model.Player;
 import model.spot.EstateSpot;
 import model.spot.Spot;
-import util.Tool;
+import util.FormatTool;
 
 /**
  * Created by Ethan on 16/4/29.
@@ -19,22 +19,22 @@ public class MapView {
     private static final String LOTTERY_SPOT = "彩";
     private static final String NEWS_SPOT = "新";
     private static final String ESTATE_SPOT = "地①②③④";
-    private static final String PALYER_MARK = "ＡＢＣＤ";
+    private static final String PLAYER_MARK = "ＡＢＣＤ";
 
     public static Spot getPlayerSpot(Player player) {
-        TuiMap map = (TuiMap) Kernal.getInstance().getMap();
+        TuiMap map = (TuiMap) Kernel.getInstance().getMap();
         return map.getSpots().get(player.getPosition());
     }
 
     public static Spot getDistantSpot(Player player, int distance) {
-        TuiMap map = (TuiMap) Kernal.getInstance().getMap();
-        distance = Tool.distanceWithOrientation(player, distance);
-        return map.getSpots().get(player.getPosition() + distance);
+        TuiMap map = (TuiMap) Kernel.getInstance().getMap();
+        distance = FormatTool.distanceWithOrientation(player, distance);
+        return map.getSpots().get(player.checkPosition(distance));
     }
 
     public static SpotLoc getPlayerLoc(Player player) {
-        TuiMap map = (TuiMap) Kernal.getInstance().getMap();
-        return map.spotLoc.get(map.getSpots().get(player.getPosition()));
+        TuiMap map = (TuiMap) Kernel.getInstance().getMap();
+        return map.spotLoc.get(map.getSpots().get(player.checkPosition(0)));
     }
 
     public static String getEstateOwner(EstateSpot spot) {
@@ -71,7 +71,7 @@ public class MapView {
     }
 
     private static String[][] constructMap() {
-        TuiMap map = (TuiMap) Kernal.getInstance().getMap();
+        TuiMap map = (TuiMap) Kernel.getInstance().getMap();
         String[][] mapShape = new String[map.getHeight()][map.getWidth()];
         for (int i = 0; i < map.getHeight(); i++)
             for (int j = 0; j < map.getWidth(); j++)
@@ -90,12 +90,11 @@ public class MapView {
         }
     }
 
-    public static void printMapwithPlayer() {
-        TuiMap map = (TuiMap) Kernal.getInstance().getMap();
+    public static void printMapWithPlayer() {
         String[][] mapShape = constructMap();
-        Kernal.getInstance().getPlayers().stream().forEach(e ->
+        Kernel.getInstance().getPlayers().stream().forEach(e ->
                 mapShape[getPlayerLoc(e).getY()][getPlayerLoc(e).getX()]
-                        = PALYER_MARK.charAt(e.getId() - 1) + "");
+                        = PLAYER_MARK.charAt(e.getId() - 1) + "");
 
         for (String[] s1 : mapShape) {
             for (String s2 : s1) {

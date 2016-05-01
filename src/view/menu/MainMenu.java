@@ -1,7 +1,7 @@
 package view.menu;
 
 import model.Dice;
-import model.Kernal;
+import model.Kernel;
 import model.Player;
 import model.card.Card;
 import model.card.SimpleCardFactory;
@@ -41,7 +41,7 @@ public class MainMenu {
             int choiceNum = TuiInput.readInt(new Scanner(System.in), 0, 8);
             switch (choiceNum) {
                 case 0:
-                    MapView.printMapwithPlayer();
+                    MapView.printMapWithPlayer();
                     break;
                 case 1:
                     MapView.printMap();
@@ -63,7 +63,7 @@ public class MainMenu {
                     opt = false;
                     break;
                 case 7:
-
+                    StockMenu.displayStockMenu(player);
                     break;
                 case 8:
                     player.giveUp();
@@ -115,7 +115,7 @@ public class MainMenu {
         System.out.println("请输入要查看的位置(前后10格)：");
         int distanceNum = TuiInput.readInt(new Scanner(System.in), -10, 10);
         int position = player.checkPosition(distanceNum);
-        Spot spot = Kernal.getInstance().getMap().getSpots().get(position);
+        Spot spot = Kernel.getInstance().getMap().getSpots().get(position);
         spot.getSpotInfo().stream().forEach(System.out::println);
     }
 
@@ -123,7 +123,7 @@ public class MainMenu {
         String[] title = {"玩家名 ", "现金", "存款", "点券", "房产总额", "资产总额"};
         Arrays.asList(title).stream().forEach(TuiOutput::printTable);
         System.out.println();
-        Kernal.getInstance().getPlayers().stream().forEach(e -> {
+        Kernel.getInstance().getPlayers().stream().forEach(e -> {
             String[] info = new String[6];
             info[0] = e.getName();
             info[1] = String.format("%.1f", e.getCash());

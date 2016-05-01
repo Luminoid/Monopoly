@@ -2,7 +2,7 @@ package action.event;
 
 import action.command.CommandType;
 import action.command.PromptCommand;
-import action.command.SimpleCommamdFactory;
+import action.command.SimpleCommandFactory;
 import model.Player;
 import model.card.Card;
 import model.card.CardType;
@@ -16,7 +16,7 @@ public class BonusCardEvent extends Event {
     public void toggle(Player player) {
         CardType cardType = Card.generateCard();
         player.addCard(cardType);
-        PromptCommand command = (PromptCommand) SimpleCommamdFactory.createCommand(CommandType.PROMPT_COMMAND);
+        PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
         command.setCommandStr(player.getName() + " 获得一张" + SimpleCardFactory.createCard(cardType).getName());
     }
 }

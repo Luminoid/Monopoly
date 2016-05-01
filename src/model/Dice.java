@@ -6,8 +6,8 @@ import java.util.Random;
  * Created by Ethan on 16/4/29.
  */
 public class Dice {
-    int value;
-    boolean isControlled;
+    private int value;
+    private boolean isControlled;
     private static Dice dice;
 
     private Dice() {

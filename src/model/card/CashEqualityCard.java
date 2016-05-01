@@ -2,8 +2,8 @@ package model.card;
 
 import action.command.CommandType;
 import action.command.PromptCommand;
-import action.command.SimpleCommamdFactory;
-import model.Kernal;
+import action.command.SimpleCommandFactory;
+import model.Kernel;
 import model.Player;
 
 /**
@@ -19,10 +19,10 @@ public class CashEqualityCard extends Card {
 
     @Override
     public boolean use(Player player) {
-        double averageCash = Kernal.getInstance().getPlayers().stream().filter(e -> !e.isBankrupt()).
+        double averageCash = Kernel.getInstance().getPlayers().stream().filter(e -> !e.isBankrupt()).
                 mapToDouble(Player::getCash).average().getAsDouble();
-        Kernal.getInstance().getPlayers().stream().filter(e -> !e.isBankrupt()).forEach(e -> e.setCash(averageCash));
-        PromptCommand command = (PromptCommand) SimpleCommamdFactory.createCommand(CommandType.PROMPT_COMMAND);
+        Kernel.getInstance().getPlayers().stream().filter(e -> !e.isBankrupt()).forEach(e -> e.setCash(averageCash));
+        PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
         command.setCommandStr(player.getName() + " 使用了均富卡");
         return true;
     }

@@ -13,7 +13,7 @@ public abstract class Spot {
     protected String typeName;
     protected String description;
     protected SpotType spotType;
-    protected boolean isBlocked;
+    private boolean isBlocked;
 
     public abstract void arriveEvent(Player player);
 

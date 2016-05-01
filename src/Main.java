@@ -1,4 +1,4 @@
-import model.Kernal;
+import model.Kernel;
 import view.init.GameBegin;
 import view.init.UserInfoSetting;
 
@@ -9,7 +9,7 @@ public class Main {
     public static void main(String[] args) {
         GameBegin.gameBegin();
         UserInfoSetting.userInfoInput();
-        Kernal.getInstance().addCards();
-        Kernal.getInstance().circulate();
+        Kernel.getInstance().addCards();
+        Kernel.getInstance().circulate();
     }
 }

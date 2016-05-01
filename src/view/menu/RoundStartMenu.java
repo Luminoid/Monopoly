@@ -1,6 +1,6 @@
 package view.menu;
 
-import model.Kernal;
+import model.Kernel;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -10,7 +10,7 @@ import java.util.GregorianCalendar;
  */
 public class RoundStartMenu {
     public static void displayRoundMenu() {
-        GregorianCalendar date = Kernal.getInstance().getDate();
+        GregorianCalendar date = Kernel.getInstance().getDate();
         System.out.println
                 ("今天是" + date.get(Calendar.YEAR) + "年" + (date.get(Calendar.MONTH) + 1) + "月" + date.get(Calendar.DAY_OF_MONTH) + "日");
         System.out.println("================================================================================\n");

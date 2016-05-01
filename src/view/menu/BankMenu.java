@@ -1,6 +1,7 @@
 package view.menu;
 
 import model.Player;
+import util.FormatTool;
 import view.util.TuiInput;
 
 import java.util.Scanner;
@@ -12,7 +13,8 @@ public class BankMenu {
     public static void displayBankMenu(Player player) {
         System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
         while (true) {
-            System.out.println("欢迎来到银行，您有现金¥" + player.getCash() + "元，存款¥" + player.getDeposit() + "元。");
+            System.out.println("欢迎来到银行，您有现金¥" +
+                    FormatTool.formatMoney(player.getCash()) + "元，存款¥" + FormatTool.formatMoney(player.getDeposit()) + "元。");
             System.out.println("您现在可以执行如下操作：");
             System.out.println("1 - 存款");
             System.out.println("2 - 取款");
@@ -32,7 +34,7 @@ public class BankMenu {
         }
     }
 
-    public static void depositMoney(Player player) {
+    private static void depositMoney(Player player) {
         System.out.println("请输入您想存入的现金：");
         double num = TuiInput.readDouble(new Scanner(System.in));
         if (num > player.getCash()) {
@@ -43,7 +45,7 @@ public class BankMenu {
         }
     }
 
-    public static void withdrawMoney(Player player) {
+    private static void withdrawMoney(Player player) {
         System.out.println("请输入您想取出的现金：");
         double num = TuiInput.readDouble(new Scanner(System.in));
         if (num > player.getCash()) {

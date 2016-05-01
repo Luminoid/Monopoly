@@ -3,13 +3,12 @@ package model;
 import action.command.*;
 import model.card.CardType;
 import model.spot.EstateSpot;
+import model.stock.Stock;
 import util.PlayerOrientation;
-import util.Tool;
+import util.FormatTool;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -27,7 +26,7 @@ public class Player {
     private int ticket;
     private ArrayList<EstateSpot> houses;
     private Hashtable<CardType, Integer> cards;
-    private HashMap<Stock, Integer> stocks;
+    private Hashtable<Stock, Integer> stocks;
     private boolean isBankrupt;
 
     public Player(String name, double cash) {
@@ -39,8 +38,8 @@ public class Player {
         this.deposit = 0;
         this.ticket = 20;
         this.houses = new ArrayList<>();
-        this.cards = new Hashtable<CardType, Integer>();
-        this.stocks = new HashMap<Stock, Integer>();
+        this.cards = new Hashtable<>();
+        this.stocks = new Hashtable<>();
         this.isBankrupt = false;
     }
 
@@ -53,7 +52,7 @@ public class Player {
         this.deposit = 0;
         this.getHouses().clear();
         this.isBankrupt = true;
-        PromptCommand command = (PromptCommand) SimpleCommamdFactory.createCommand(CommandType.PROMPT_COMMAND);
+        PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
         command.setCommandStr(name + "已认输");
     }
 
@@ -63,6 +62,22 @@ public class Player {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public boolean payWithDepositPriority(double fee) {
+        if (deposit >= fee) {
+            deposit -= fee;
+            return true;
+        } else {
+            deposit = 0;
+            fee -= deposit;
+            if (cash >= fee) {
+                cash -= fee;
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -100,12 +115,12 @@ public class Player {
                         estateSpot.sell();
                         houses.remove(estateSpot);
                     }
-                    SellEstateCommand command = (SellEstateCommand) SimpleCommamdFactory.
+                    SellEstateCommand command = (SellEstateCommand) SimpleCommandFactory.
                             createCommand(CommandType.SELL_ESTATE_COMMAND);
                     command.setCommandStr("因为现金不足，" + name + "出售了" + estateSpot.getLocName() + "的地产");
                 }
                 if (fee > 0) {
-                    BankruptCommand command = (BankruptCommand) SimpleCommamdFactory.
+                    BankruptCommand command = (BankruptCommand) SimpleCommandFactory.
                             createCommand(CommandType.BANKRUPT_COMMAND);
                     command.setPlayer(this);
                 }
@@ -126,17 +141,13 @@ public class Player {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public int getPosition() {
         return position;
     }
 
     public void addPosition(int distance) {
-        int mapSize = Kernal.getInstance().getMap().getSize();
-        position += Tool.distanceWithOrientation(this, distance);
+        int mapSize = Kernel.getInstance().getMap().getSize();
+        position += FormatTool.distanceWithOrientation(this, distance);
         if (position >= mapSize) {
             position -= mapSize;
         } else if (position < 0) {
@@ -145,7 +156,7 @@ public class Player {
     }
 
     public int checkPosition(int distance) {
-        int mapSize = Kernal.getInstance().getMap().getSize();
+        int mapSize = Kernel.getInstance().getMap().getSize();
         int ret = position;
         distance *= (orientation == PlayerOrientation.FORWARD ? 1 : -1);
         ret += distance;
@@ -162,7 +173,7 @@ public class Player {
     }
 
     public void setOrientation() {
-        orientation = (orientation == PlayerOrientation.FORWARD ? PlayerOrientation.BACKWORD : PlayerOrientation.FORWARD);
+        orientation = (orientation == PlayerOrientation.FORWARD ? PlayerOrientation.BACKWARD : PlayerOrientation.FORWARD);
     }
 
     public double getCash() {
@@ -213,7 +224,7 @@ public class Player {
         cards.put(cardType, cards.get(cardType) - 1);
     }
 
-    public Map<Stock, Integer> getStocks() {
+    public Hashtable<Stock, Integer> getStocks() {
         return stocks;
     }
 

@@ -5,7 +5,7 @@ import view.impl.*;
 /**
  * Created by Ethan on 16/4/30.
  */
-public class SimpleCommamdFactory {
+public class SimpleCommandFactory {
     public static Command createCommand(CommandType commandType) {
         Command command = null;
         switch (commandType) {

@@ -2,7 +2,7 @@ package model.card;
 
 import action.command.CommandType;
 import action.command.PromptCommand;
-import action.command.SimpleCommamdFactory;
+import action.command.SimpleCommandFactory;
 import model.Player;
 import model.spot.EstateSpot;
 import view.map.MapView;
@@ -27,7 +27,7 @@ public class PurchaseLandCard extends Card {
             ((EstateSpot) MapView.getPlayerSpot(player)).getOwner().getHouses().remove(spot);
             player.getHouses().add(spot);
             spot.setOwner(player);
-            PromptCommand command = (PromptCommand) SimpleCommamdFactory.createCommand(CommandType.PROMPT_COMMAND);
+            PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
             command.setCommandStr(player.getName() + " 花费¥" + spot.getPurchasingPrice() + "买下了" + spot.getLocName() + "的房子");
             return true;
         } else {

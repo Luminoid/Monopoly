@@ -2,7 +2,7 @@ package action.event;
 
 import action.command.CommandType;
 import action.command.PromptCommand;
-import action.command.SimpleCommamdFactory;
+import action.command.SimpleCommandFactory;
 import model.Player;
 
 /**
@@ -13,7 +13,7 @@ public class BonusTicketEvent extends Event {
     public void toggle(Player player) {
         int ticketNum = (int) (Math.random() * 10 + 5);
         player.setTicket(player.getTicket() + ticketNum);
-        PromptCommand command = (PromptCommand) SimpleCommamdFactory.createCommand(CommandType.PROMPT_COMMAND);
+        PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
         command.setCommandStr(player.getName() + "获得了" + ticketNum + "点券");
     }
 }

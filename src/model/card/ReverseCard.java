@@ -2,7 +2,7 @@ package model.card;
 
 import action.command.CommandType;
 import action.command.PromptCommand;
-import action.command.SimpleCommamdFactory;
+import action.command.SimpleCommandFactory;
 import model.Player;
 
 /**
@@ -19,7 +19,7 @@ public class ReverseCard extends Card {
     @Override
     public boolean use(Player player) {
         player.setOrientation();
-        PromptCommand command = (PromptCommand) SimpleCommamdFactory.createCommand(CommandType.PROMPT_COMMAND);
+        PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
         command.setCommandStr("您使用了转向卡");
         return true;
     }

@@ -2,7 +2,7 @@ package model.card;
 
 import action.command.CommandType;
 import action.command.PromptCommand;
-import action.command.SimpleCommamdFactory;
+import action.command.SimpleCommandFactory;
 import model.Dice;
 import model.Player;
 
@@ -19,7 +19,7 @@ public class StayCard extends Card {
 
     @Override
     public boolean use(Player player) {
-        PromptCommand command = (PromptCommand) SimpleCommamdFactory.createCommand(CommandType.PROMPT_COMMAND);
+        PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
         command.setCommandStr("您使用了滞留卡");
         Dice.getInstance().setValue(0);
         return true;

@@ -2,8 +2,8 @@ package model;
 
 import action.command.CommandType;
 import action.command.PromptCommand;
-import action.command.SimpleCommamdFactory;
-import util.Tool;
+import action.command.SimpleCommandFactory;
+import util.FormatTool;
 
 import java.util.Hashtable;
 import java.util.List;
@@ -32,14 +32,14 @@ public class LotterySystem {
         List<Player> lotteryWinners = lotteryRecord.entrySet().stream().filter(e -> e.getValue() == winningNumber).
                 map(Map.Entry::getKey).distinct().collect(Collectors.toList());
         int winnerNum = lotteryWinners.size();
-        PromptCommand command = (PromptCommand) SimpleCommamdFactory.createCommand(CommandType.PROMPT_COMMAND);
+        PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
         if (winnerNum == 0) {
             command.setCommandStr("没有人中奖");
         } else {
             double lotteryPrizePortion = lotteryPrize / winnerNum;
             lotteryWinners.stream().forEach(e -> {
                 e.addCash(lotteryPrizePortion);
-                command.setCommandStr(e.getName() + "中了" + Tool.formatMoney(lotteryPrizePortion));
+                command.setCommandStr(e.getName() + "中了" + FormatTool.formatMoney(lotteryPrizePortion));
             });
         }
         clearRecord();

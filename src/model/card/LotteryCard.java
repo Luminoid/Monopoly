@@ -1,7 +1,7 @@
 package model.card;
 
 import action.command.CommandType;
-import action.command.SimpleCommamdFactory;
+import action.command.SimpleCommandFactory;
 import action.request.IntRangeRequest;
 import model.LotterySystem;
 import model.Player;
@@ -19,7 +19,7 @@ public class LotteryCard extends Card {
 
     @Override
     public boolean use(Player player) {
-        IntRangeRequest request = (IntRangeRequest) SimpleCommamdFactory.createCommand(CommandType.INT_RANGE_REQUEST);
+        IntRangeRequest request = (IntRangeRequest) SimpleCommandFactory.createCommand(CommandType.INT_RANGE_REQUEST);
         request.setFloor(0).setCeiling(99).setQuestionStr("您正在使用彩票卡，请输入本月的彩票开奖结果(0~99)：");
         LotterySystem.setWinningNumber(request.getAnswer());
         return true;

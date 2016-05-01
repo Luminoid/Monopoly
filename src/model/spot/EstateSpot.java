@@ -3,12 +3,12 @@ package model.spot;
 import action.command.CommandType;
 import action.command.ErrorCommand;
 import action.command.PromptCommand;
-import action.command.SimpleCommamdFactory;
+import action.command.SimpleCommandFactory;
 import action.event.EstateEvent;
 import action.event.EventType;
 import action.event.SimpleEventFactory;
 import action.request.YesOrNoRequest;
-import model.Kernal;
+import model.Kernel;
 import model.Player;
 import util.EstateAction;
 
@@ -35,33 +35,33 @@ public class EstateSpot extends Spot {
     }
 
     private void askPurchasing(Player player) {
-        YesOrNoRequest request = (YesOrNoRequest) SimpleCommamdFactory.createCommand(CommandType.YES_OR_NO_REQUEST);
+        YesOrNoRequest request = (YesOrNoRequest) SimpleCommandFactory.createCommand(CommandType.YES_OR_NO_REQUEST);
         request.setQuestionStr("当前土地可供出售，价格为¥" + basePrice + "，是否购买？");
         if (request.getAnswer()) {
             if (player.pay(getPurchasingPrice())) {
                 setOwner(player);
                 player.addHouse(this);
-                EstateEvent command = (EstateEvent) SimpleEventFactory.createEvent(EventType.ESTETE_EVENT);
+                EstateEvent command = (EstateEvent) SimpleEventFactory.createEvent(EventType.ESTAETE_EVENT);
                 command.setEstateAction(EstateAction.PURCHASE).setSpot(this).setFee(getPurchasingPrice());
                 command.toggle(player);
             } else {
-                ErrorCommand command = (ErrorCommand) SimpleCommamdFactory.createCommand(CommandType.ERROR_COMMAND);
+                ErrorCommand command = (ErrorCommand) SimpleCommandFactory.createCommand(CommandType.ERROR_COMMAND);
                 command.setCommandStr("您的现金不足以购买此土地！");
             }
         }
     }
 
     private void askLevelUp(Player player) {
-        YesOrNoRequest request = (YesOrNoRequest) SimpleCommamdFactory.createCommand(CommandType.YES_OR_NO_REQUEST);
+        YesOrNoRequest request = (YesOrNoRequest) SimpleCommandFactory.createCommand(CommandType.YES_OR_NO_REQUEST);
         request.setQuestionStr("您拥有当前土地，是否花费¥" + getLevelUpPrice() + "来升级？");
         if (request.getAnswer()) {
             if (player.pay(getLevelUpPrice())) {
                 level += 1;
-                EstateEvent event = (EstateEvent) SimpleEventFactory.createEvent(EventType.ESTETE_EVENT);
+                EstateEvent event = (EstateEvent) SimpleEventFactory.createEvent(EventType.ESTAETE_EVENT);
                 event.setEstateAction(EstateAction.LEVEL_UP).setSpot(this).setFee(getLevelUpPrice());
                 event.toggle(player);
             } else {
-                ErrorCommand command = (ErrorCommand) SimpleCommamdFactory.createCommand(CommandType.ERROR_COMMAND);
+                ErrorCommand command = (ErrorCommand) SimpleCommandFactory.createCommand(CommandType.ERROR_COMMAND);
                 command.setCommandStr("您的现金不足以升级此土地！");
             }
         }
@@ -70,7 +70,7 @@ public class EstateSpot extends Spot {
     private void chargeFee(Player player) {
         player.charge(getPassByPrice());
         this.getOwner().addCash(getPassByPrice());
-        EstateEvent command = (EstateEvent) SimpleEventFactory.createEvent(EventType.ESTETE_EVENT);
+        EstateEvent command = (EstateEvent) SimpleEventFactory.createEvent(EventType.ESTAETE_EVENT);
         command.setEstateAction(EstateAction.PAY_FEE).setSpot(this).setFee(getPassByPrice());
         command.toggle(player);
     }
@@ -82,7 +82,7 @@ public class EstateSpot extends Spot {
         } else if (owner == player && level != MAX_LEVEL) {
             askLevelUp(player);
         } else if (level == MAX_LEVEL) {
-            PromptCommand command = (PromptCommand) SimpleCommamdFactory.createCommand(CommandType.PROMPT_COMMAND);
+            PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
             command.setCommandStr("该土地已升至顶级");
         } else {
             chargeFee(player);
@@ -119,7 +119,7 @@ public class EstateSpot extends Spot {
 
     public double getPassByPrice() {
         ArrayList<EstateSpot> adjacentEstate = new ArrayList<>();
-        ArrayList<Spot> spots = Kernal.getInstance().getMap().getSpots();
+        ArrayList<Spot> spots = Kernel.getInstance().getMap().getSpots();
         for (int i = 0; i < spots.size(); i++) {
             if (spots.get(i).getSpotType() == SpotType.EstateSpot) {
                 if (((EstateSpot) (spots.get(i))).getStreetName() != null) {
