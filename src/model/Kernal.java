@@ -18,7 +18,7 @@ import java.util.*;
 /**
  * Created by Ethan on 16/4/28.
  */
-public class Kernel {
+public class Kernal {
     private int playerNum;
     private List<Player> players;
     private GregorianCalendar date;
@@ -26,9 +26,9 @@ public class Kernel {
     private Map map;
     private StockMarket stockMarket;
 
-    private volatile static Kernel uniqueInstance;
+    private volatile static Kernal uniqueInstance;
 
-    private Kernel(int playerNum) {
+    private Kernal(int playerNum) {
         this.playerNum = playerNum;
         players = new ArrayList<>();
         date = new GregorianCalendar();
@@ -37,15 +37,15 @@ public class Kernel {
         stockMarket = StockGenerator.generate();
     }
 
-    public static Kernel getInstance() {
+    public static Kernal getInstance() {
         return uniqueInstance;
     }
 
     public static void createInstance(int playerNum) {
         if (uniqueInstance == null) {
-            synchronized (Kernel.class) {
+            synchronized (Kernal.class) {
                 if (uniqueInstance == null) {
-                    uniqueInstance = new Kernel(playerNum);
+                    uniqueInstance = new Kernal(playerNum);
                 }
             }
         }
