@@ -19,7 +19,7 @@ public class SimpleEventFactory {
             case CARD_SHOP_EVENT:
                 event = new CardShopEvent();
                 break;
-            case ESTAETE_EVENT:
+            case ESTATE_EVENT:
                 event = new EstateEvent();
                 break;
             case LOTTERY_EVENT:

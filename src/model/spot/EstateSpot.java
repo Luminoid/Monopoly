@@ -41,7 +41,7 @@ public class EstateSpot extends Spot {
             if (player.pay(getPurchasingPrice())) {
                 setOwner(player);
                 player.addHouse(this);
-                EstateEvent command = (EstateEvent) SimpleEventFactory.createEvent(EventType.ESTAETE_EVENT);
+                EstateEvent command = (EstateEvent) SimpleEventFactory.createEvent(EventType.ESTATE_EVENT);
                 command.setEstateAction(EstateAction.PURCHASE).setSpot(this).setFee(getPurchasingPrice());
                 command.toggle(player);
             } else {
@@ -57,7 +57,7 @@ public class EstateSpot extends Spot {
         if (request.getAnswer()) {
             if (player.pay(getLevelUpPrice())) {
                 level += 1;
-                EstateEvent event = (EstateEvent) SimpleEventFactory.createEvent(EventType.ESTAETE_EVENT);
+                EstateEvent event = (EstateEvent) SimpleEventFactory.createEvent(EventType.ESTATE_EVENT);
                 event.setEstateAction(EstateAction.LEVEL_UP).setSpot(this).setFee(getLevelUpPrice());
                 event.toggle(player);
             } else {
@@ -70,7 +70,7 @@ public class EstateSpot extends Spot {
     private void chargeFee(Player player) {
         player.charge(getPassByPrice());
         this.getOwner().addCash(getPassByPrice());
-        EstateEvent command = (EstateEvent) SimpleEventFactory.createEvent(EventType.ESTAETE_EVENT);
+        EstateEvent command = (EstateEvent) SimpleEventFactory.createEvent(EventType.ESTATE_EVENT);
         command.setEstateAction(EstateAction.PAY_FEE).setSpot(this).setFee(getPassByPrice());
         command.toggle(player);
     }
@@ -120,11 +120,11 @@ public class EstateSpot extends Spot {
     public double getPassByPrice() {
         ArrayList<EstateSpot> adjacentEstate = new ArrayList<>();
         ArrayList<Spot> spots = Kernel.getInstance().getMap().getSpots();
-        for (int i = 0; i < spots.size(); i++) {
-            if (spots.get(i).getSpotType() == SpotType.EstateSpot) {
-                if (((EstateSpot) (spots.get(i))).getStreetName() != null) {
-                    if (((EstateSpot) (spots.get(i))).getStreetName().equals(streetName)) {
-                        adjacentEstate.add((EstateSpot) (spots.get(i)));
+        for (Spot spot : spots) {
+            if (spot.getSpotType() == SpotType.EstateSpot) {
+                if (((EstateSpot) spot).getStreetName() != null) {
+                    if (((EstateSpot) spot).getStreetName().equals(streetName)) {
+                        adjacentEstate.add((EstateSpot) spot);
                     }
                 }
             }
