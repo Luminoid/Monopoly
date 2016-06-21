@@ -18,9 +18,6 @@ public class SimpleCommandFactory {
             case PROMPT_COMMAND:
                 command = new PromptImpl();
                 break;
-            case SELL_ESTATE_COMMAND:
-                command = new SellEstateImpl();
-                break;
             case BANKRUPT_COMMAND:
                 command = new BankruptImpl();
                 break;

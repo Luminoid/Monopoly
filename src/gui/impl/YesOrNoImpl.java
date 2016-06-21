@@ -1,8 +1,10 @@
 package gui.impl;
 
 import action.request.YesOrNoRequest;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
-import java.util.Scanner;
+import java.util.Optional;
 
 /**
  * Created by Ethan on 16/4/30.
@@ -11,21 +13,24 @@ public class YesOrNoImpl extends YesOrNoRequest {
 
     @Override
     public void action() {
-        while (true) {
-            System.out.println(getQuestionStr());
-            System.out.println("输入Y或N");
-            System.out.print(">> ");
-            Scanner scanner = new Scanner(System.in);
-            String s = scanner.nextLine().trim();
-            if (s.equals("Y")) {
-                setAnswer(true);
-                break;
-            } else if (s.equals("N")) {
-                setAnswer(false);
-                break;
-            } else {
-                System.out.println("输入错误！请重新输入：");
-            }
+        if (yesOrNoRequest(getQuestionStr())) {
+            setAnswer(true);
+        } else {
+            setAnswer(false);
+        }
+    }
+
+    private boolean retValue;
+    public boolean yesOrNoRequest(String s) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("请选择");
+        alert.setHeaderText(null);
+        alert.setContentText(s);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

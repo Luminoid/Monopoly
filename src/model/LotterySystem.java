@@ -21,6 +21,8 @@ public class LotterySystem {
     public static void buyLottery(Player player, int num) {
         lotteryRecord.put(player, num);
         player.pay(100);
+        // TODO: 16/6/21  
+        System.out.println(num);
     }
 
     public static void drawLottery() {

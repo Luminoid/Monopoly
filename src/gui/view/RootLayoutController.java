@@ -1,5 +1,8 @@
 package gui.view;
 
+import action.command.CommandType;
+import action.command.PromptCommand;
+import action.command.SimpleCommandFactory;
 import gui.ViewController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -67,23 +70,42 @@ public class RootLayoutController {
 
     @FXML
     private void handleThrowDiceBtn() {
-        Player player = Kernel.getInstance().getCurrentPlayer();
+        Player currentPlayer = Kernel.getInstance().getCurrentPlayer();
         int diceValue = Dice.getInstance().rollDice();
-        for (int step = 0; step < diceValue; step++) {
-            if (PlayerUtil.getPlayerSpot(player).getSpotType() == SpotType.BankSpot) {
-                PlayerUtil.getPlayerSpot(player).passByEvent(player);
-            } else if (PlayerUtil.getDistantSpot(player, 1).isBlocked()) {
-                PlayerUtil.getDistantSpot(player, 1).setBlocked(false);
-                player.move();
-                ViewController.getMapView().requestLayout();
-                step++;
-                break;
+        new Thread (() -> {
+            int step;
+            for (step = 0; step < diceValue; step++) {
+                if (PlayerUtil.getPlayerSpot(currentPlayer).getSpotType() == SpotType.BankSpot) {
+                    PlayerUtil.getPlayerSpot(currentPlayer).passByEvent(currentPlayer);
+                } else if (PlayerUtil.getDistantSpot(currentPlayer, 1).isBlocked()) {
+                    PlayerUtil.getDistantSpot(currentPlayer, 1).setBlocked(false);
+                    currentPlayer.move();
+                    ViewController.getGc().clearRect(0, 0, 556, 546);
+                    ViewController.getMapViewController().drawMap(ViewController.getGc());
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    step++;
+                    break;
+                }
+                currentPlayer.move();
+                ViewController.getGc().clearRect(0, 0, 556, 546);
+                ViewController.getMapViewController().drawMap(ViewController.getGc());
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-            player.move();
-        }
-        PlayerUtil.getPlayerSpot(player).arriveEvent(player);
+            PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
+            command.setCommandStr("玩家 " + currentPlayer.getName() + " 前进了" + step + "步");
 
-        Kernel.getInstance().getSemaphore().release();
+            PlayerUtil.getPlayerSpot(currentPlayer).arriveEvent(currentPlayer);
+            Kernel.getInstance().getSemaphore().release();
+
+        }).start();
     }
 
     public void promptText(String s) {

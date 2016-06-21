@@ -41,7 +41,7 @@ public class EstateSpot extends Spot {
 
     private void askPurchasing(Player player) {
         YesOrNoRequest request = (YesOrNoRequest) SimpleCommandFactory.createCommand(CommandType.YES_OR_NO_REQUEST);
-        request.setQuestionStr("当前土地可供出售，价格为¥" + basePrice + "，是否购买？");
+        request.setQuestionStr("当前土地可供出售，价格为¥" + basePrice.get() + "，是否购买？");
         if (request.getAnswer()) {
             if (player.pay(getPurchasingPrice())) {
                 setOwner(player);

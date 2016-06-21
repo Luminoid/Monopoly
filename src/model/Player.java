@@ -149,8 +149,8 @@ public class Player {
                         estateSpot.sell();
                         houses.remove(estateSpot);
                     }
-                    SellEstateCommand command = (SellEstateCommand) SimpleCommandFactory.
-                            createCommand(CommandType.SELL_ESTATE_COMMAND);
+                    PromptCommand command = (PromptCommand) SimpleCommandFactory.
+                            createCommand(CommandType.PROMPT_COMMAND);
                     command.setCommandStr("因为现金不足，" + name + "出售了" + estateSpot.getLocName() + "的地产");
                 }
                 if (fee > 0) {

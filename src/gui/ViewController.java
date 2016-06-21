@@ -5,6 +5,7 @@ package gui;/**
 import gui.impl.PromptImpl;
 import gui.init.InitViewController;
 import gui.view.MapViewController;
+import gui.view.RootLayoutController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -22,6 +23,9 @@ public class ViewController extends Application {
     private Stage primaryStage;
     private BorderPane rootLayout;
     private static Group mapView;
+    private static GraphicsContext gc;
+    private static MapViewController mapViewController;
+    private static RootLayoutController rootLayoutController;
 
     public static void main(String[] args) {
         launch(args);
@@ -51,6 +55,28 @@ public class ViewController extends Application {
             initViewController.setViewController(this);
 
             primaryStage.show();
+
+//            Dialog<Integer> dialog = new Dialog();
+//            dialog.setTitle("请选择");
+//            dialog.setHeaderText("getString");
+//            ButtonType okButtonType = new ButtonType("确认", ButtonBar.ButtonData.OK_DONE);
+//            dialog.getDialogPane().getButtonTypes().add(okButtonType);
+//            GridPane grid = new GridPane();
+//            Slider slider = new Slider();
+//            slider.setMin(0);
+//            slider.setMax(100);
+//            slider.setValue(40);
+//            slider.setShowTickLabels(true);
+//            slider.setShowTickMarks(true);
+//            slider.setMajorTickUnit(50);
+//            slider.setMinorTickCount(5);
+//            slider.setBlockIncrement(10);
+//            grid.add(slider, 0, 0);
+//            Optional<ButtonType> result = dialog.showAndWait();
+//            if (result.isPresent() && result.get() == ButtonType.OK) {
+//                System.out.println("aaa");
+//            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,6 +91,7 @@ public class ViewController extends Application {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("view/RootLayout.fxml"));
             rootLayout = loader.load();
 
+            rootLayoutController = loader.getController();
             // Give RootLayoutController to other Class
             PromptImpl prompt = new PromptImpl();
             prompt.setViewController(loader.getController());
@@ -86,9 +113,9 @@ public class ViewController extends Application {
     public void showMapView() {
         mapView = new Group();
         Canvas canvas = new Canvas(556, 546);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        MapViewController controller = new MapViewController();
-        controller.drawMap(gc);
+        gc = canvas.getGraphicsContext2D();
+        mapViewController = new MapViewController();
+        mapViewController.drawMap(gc);
         mapView.getChildren().add(canvas);
 
         // Set person overview into the center of root layout.
@@ -105,5 +132,17 @@ public class ViewController extends Application {
 
     public static Group getMapView() {
         return mapView;
+    }
+
+    public static GraphicsContext getGc() {
+        return gc;
+    }
+
+    public static MapViewController getMapViewController() {
+        return mapViewController;
+    }
+
+    public static RootLayoutController getRootLayoutController() {
+        return rootLayoutController;
     }
 }
