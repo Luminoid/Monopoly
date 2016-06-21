@@ -4,48 +4,65 @@ import action.command.CommandType;
 import action.command.FindWinnerCommand;
 import action.command.PromptCommand;
 import action.command.SimpleCommandFactory;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import model.card.CardType;
+import model.map.MapGenerator;
 import model.stock.StockGenerator;
 import model.stock.StockMarket;
+import tui.menu.MainMenu;
 import util.DateTool;
-import util.PlayerTool;
-import view.map.MapGenerator;
-import view.menu.MainMenu;
-import view.menu.RoundStartMenu;
+import util.PlayerOrientation;
+import util.PlayerUtil;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.concurrent.Semaphore;
 
 /**
  * Created by Ethan on 16/4/28.
  */
 public class Kernel {
     private int playerNum;
-    private List<Player> players;
+    private ObservableList<Player> players;
     private GregorianCalendar date;
     private GregorianCalendar endDate;
-    private Map map;
+    private model.map.Map map;
     private StockMarket stockMarket;
+    private boolean isGui;
+    private ObjectProperty<Player> currentPlayer;
+    private ObjectProperty<PlayerOrientation> currentOrientation;
+    private Semaphore semaphore = new Semaphore(0);
 
     private volatile static Kernel uniqueInstance;
 
-    private Kernel(int playerNum) {
+    private Kernel(int playerNum, boolean isGui) {
         this.playerNum = playerNum;
-        players = new ArrayList<>();
+        players = FXCollections.observableArrayList();
         date = new GregorianCalendar();
         endDate = new GregorianCalendar();
         map = MapGenerator.generate();
         stockMarket = StockGenerator.generate();
+        currentPlayer = new SimpleObjectProperty<>(new Player());
+        currentOrientation = new SimpleObjectProperty<>(PlayerOrientation.FORWARD);
+        this.isGui = isGui;
     }
 
     public static Kernel getInstance() {
         return uniqueInstance;
     }
 
-    public static void createInstance(int playerNum) {
+    public static void createInstance(int playerNum, boolean isGui) {
         if (uniqueInstance == null) {
             synchronized (Kernel.class) {
                 if (uniqueInstance == null) {
-                    uniqueInstance = new Kernel(playerNum);
+                    uniqueInstance = new Kernel(playerNum, isGui);
                 }
             }
         }
@@ -63,15 +80,30 @@ public class Kernel {
             if (DateTool.isWeekday(date)) {
                 stockMarket.open();
             }
-            RoundStartMenu.displayRoundMenu();
+            PromptCommand dateCommand = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
+            dateCommand.setCommandStr("今天是" + date.get(Calendar.YEAR) + "年" + (date.get(Calendar.MONTH) + 1) + "月" + date.get(Calendar.DAY_OF_MONTH) + "日");
             for (Iterator<Player> it = players.iterator(); it.hasNext(); ) {
                 Player player = it.next();
+
+                Platform.runLater(() -> {
+                    currentPlayer.set(player);
+                    currentOrientation.set(player.getOrientation());
+                });
+
                 if (players.size() == 1) {
                     FindWinnerCommand command = (FindWinnerCommand) SimpleCommandFactory.createCommand(CommandType.FIND_WINNER_COMMAND);
                     command.setCommandStr(player.getName());
                     return;
                 }
-                MainMenu.displayMainMenu(player);
+                if (isGui) {
+                    try {
+                        semaphore.acquire();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    MainMenu.displayMainMenu(player);
+                }
                 if (player.isBankrupt()) {
                     it.remove();
                 }
@@ -80,7 +112,7 @@ public class Kernel {
         }
         // Time is over
         Player winner = players.stream().max((a, b) -> {
-            if (PlayerTool.getAsset(a) - PlayerTool.getAsset(b) > 0) {
+            if (PlayerUtil.getAsset(a) - PlayerUtil.getAsset(b) > 0) {
                 return 1;
             } else {
                 return -1;
@@ -90,7 +122,7 @@ public class Kernel {
         command.setCommandStr(winner.getName());
     }
 
-    public Map getMap() {
+    public model.map.Map getMap() {
         return map;
     }
 
@@ -118,7 +150,7 @@ public class Kernel {
         return playerNum;
     }
 
-    public List<Player> getPlayers() {
+    public ObservableList<Player> getPlayers() {
         return players;
     }
 
@@ -132,5 +164,43 @@ public class Kernel {
                 e.put(cardType, 10);
             }
         });
+    }
+
+    public PlayerOrientation getCurrentOrientation() {
+        return currentOrientation.get();
+    }
+
+    public StringBinding getCurrentOrientationString() {
+        return Bindings.createStringBinding(
+                () -> currentOrientation.get() == PlayerOrientation.FORWARD ? "顺时针" : "逆时针", currentOrientation
+        );
+    }
+
+    public ObjectProperty<PlayerOrientation> currentOrientationProperty() {
+        return currentOrientation;
+    }
+
+    public void setCurrentOrientation(PlayerOrientation currentOrientation) {
+        this.currentOrientation.set(currentOrientation);
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer.get();
+    }
+
+    public StringBinding getCurrentPlayerName() {
+        return Bindings.createStringBinding(() -> currentPlayer.get().getName(), currentPlayer);
+    }
+
+    public ObjectProperty<Player> currentPlayerProperty() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(Player currentPlayer) {
+        this.currentPlayer.set(currentPlayer);
+    }
+
+    public Semaphore getSemaphore() {
+        return semaphore;
     }
 }

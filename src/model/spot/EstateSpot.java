@@ -8,6 +8,11 @@ import action.event.EstateEvent;
 import action.event.EventType;
 import action.event.SimpleEventFactory;
 import action.request.YesOrNoRequest;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import model.Kernel;
 import model.Player;
 import util.EstateAction;
@@ -22,16 +27,16 @@ import java.util.List;
 public class EstateSpot extends Spot {
     private final int MAX_LEVEL = 6;
     private Player owner;
-    private double basePrice;
-    private int level;
+    private DoubleProperty basePrice;
+    private IntegerProperty level;
     private String streetName;
 
     public EstateSpot(double basePrice) {
         this.typeName = "土地";
         this.description = (owner == null ? "可供出售的土地" : "已被购买的土地");
         this.spotType = SpotType.EstateSpot;
-        this.basePrice = basePrice;
-        this.level = 1;
+        this.basePrice = new SimpleDoubleProperty(basePrice);
+        this.level = new SimpleIntegerProperty(1);
     }
 
     private void askPurchasing(Player player) {
@@ -56,7 +61,7 @@ public class EstateSpot extends Spot {
         request.setQuestionStr("您拥有当前土地，是否花费¥" + getLevelUpPrice() + "来升级？");
         if (request.getAnswer()) {
             if (player.pay(getLevelUpPrice())) {
-                level += 1;
+                level.set(level.get() + 1);
                 EstateEvent event = (EstateEvent) SimpleEventFactory.createEvent(EventType.ESTATE_EVENT);
                 event.setEstateAction(EstateAction.LEVEL_UP).setSpot(this).setFee(getLevelUpPrice());
                 event.toggle(player);
@@ -79,9 +84,9 @@ public class EstateSpot extends Spot {
     public void arriveEvent(Player player) {
         if (owner == null) {
             askPurchasing(player);
-        } else if (owner == player && level != MAX_LEVEL) {
+        } else if (owner == player && level.get() != MAX_LEVEL) {
             askLevelUp(player);
-        } else if (level == MAX_LEVEL) {
+        } else if (level.get() == MAX_LEVEL) {
             PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
             command.setCommandStr("该土地已升至顶级");
         } else {
@@ -110,16 +115,16 @@ public class EstateSpot extends Spot {
     }
 
     public double getPurchasingPrice() {
-        return level * basePrice;
+        return level.get() * basePrice.get();
     }
 
     public double getLevelUpPrice() {
-        return level * basePrice * 0.5;
+        return level.get() * basePrice.get() * 0.5;
     }
 
     public double getPassByPrice() {
         ArrayList<EstateSpot> adjacentEstate = new ArrayList<>();
-        ArrayList<Spot> spots = Kernel.getInstance().getMap().getSpots();
+        ArrayList<Spot> spots = Kernel.getInstance().getMap().getSpotList();
         for (Spot spot : spots) {
             if (spot.getSpotType() == SpotType.EstateSpot) {
                 if (((EstateSpot) spot).getStreetName() != null) {
@@ -131,13 +136,13 @@ public class EstateSpot extends Spot {
         }
         double price = adjacentEstate.stream().filter(e -> e.getOwner() == owner)
                 .map(e -> e.getLevel() * e.getBasePrice() * 0.05).reduce(0.0, (a, b) -> a + b);
-        price += level * basePrice * 0.05;
+        price += level.get() * basePrice.get() * 0.05;
         return price;
     }
 
     public void sell() {
         owner = null;
-        level = 1;
+        level = new SimpleIntegerProperty(1);
     }
 
     public Player getOwner() {
@@ -149,19 +154,27 @@ public class EstateSpot extends Spot {
     }
 
     public double getBasePrice() {
+        return basePrice.get();
+    }
+
+    public DoubleProperty basePriceProperty() {
         return basePrice;
     }
 
     public void setBasePrice(double basePrice) {
-        this.basePrice = basePrice;
+        this.basePrice.set(basePrice);
     }
 
     public int getLevel() {
+        return level.get();
+    }
+
+    public IntegerProperty levelProperty() {
         return level;
     }
 
     public void setLevel(int level) {
-        this.level = level;
+        this.level.set(level);
     }
 
     public String getStreetName() {
@@ -170,5 +183,9 @@ public class EstateSpot extends Spot {
 
     public void setStreetName(String streetName) {
         this.streetName = streetName;
+    }
+
+    public DoubleBinding getPriceBinding() {
+        return basePrice.multiply(level);
     }
 }

@@ -12,7 +12,7 @@ public class FormatTool {
 
     public static String formatRate(double value) {
         value *= 100;
-        return String.format("%.1f", value)+"%";
+        return String.format("%.1f", value) + "%";
     }
 
     public static int distanceWithOrientation(Player player, int distance) {

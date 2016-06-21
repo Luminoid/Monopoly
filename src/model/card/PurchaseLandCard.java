@@ -5,7 +5,7 @@ import action.command.PromptCommand;
 import action.command.SimpleCommandFactory;
 import model.Player;
 import model.spot.EstateSpot;
-import view.map.MapView;
+import util.PlayerUtil;
 
 /**
  * Created by Ethan on 16/4/27.
@@ -20,11 +20,11 @@ public class PurchaseLandCard extends Card {
 
     @Override
     public boolean use(Player player) {
-        EstateSpot spot = (EstateSpot) MapView.getPlayerSpot(player);
+        EstateSpot spot = (EstateSpot) PlayerUtil.getPlayerSpot(player);
         if (spot.getOwner() != player && player.getCash() >= spot.getPurchasingPrice()) {
             player.pay(spot.getPurchasingPrice());
-            ((EstateSpot) MapView.getPlayerSpot(player)).getOwner().addCash(spot.getPurchasingPrice());
-            ((EstateSpot) MapView.getPlayerSpot(player)).getOwner().getHouses().remove(spot);
+            ((EstateSpot) PlayerUtil.getPlayerSpot(player)).getOwner().addCash(spot.getPurchasingPrice());
+            ((EstateSpot) PlayerUtil.getPlayerSpot(player)).getOwner().getHouses().remove(spot);
             player.getHouses().add(spot);
             spot.setOwner(player);
             PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);

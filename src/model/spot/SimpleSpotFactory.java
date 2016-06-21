@@ -34,7 +34,9 @@ public class SimpleSpotFactory {
             case NewsSpot:
                 spot = new NewsSpot();
                 break;
-
+            case HospitalSpot:
+                spot = new HospitalSpot();
+                break;
         }
         return spot;
     }

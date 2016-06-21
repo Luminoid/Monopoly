@@ -46,7 +46,7 @@ public class Stock {
     }
 
     public double getFloatRate() {
-        if (priceRecord.size()>=2){
+        if (priceRecord.size() >= 2) {
             return (price - priceRecord.get(priceRecord.size() - 2)) / priceRecord.get(priceRecord.size() - 2);
         } else {
             return 0;

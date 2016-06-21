@@ -1,7 +1,7 @@
 package action.event;
 
 import model.Player;
-import view.menu.BankMenu;
+import tui.menu.BankMenu;
 
 /**
  * Created by Ethan on 16/4/30.

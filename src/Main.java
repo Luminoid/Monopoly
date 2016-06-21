@@ -1,6 +1,6 @@
 import model.Kernel;
-import view.init.GameBegin;
-import view.init.UserInfoSetting;
+import tui.init.GameBegin;
+import tui.init.UserInfoSetting;
 
 /**
  * Created by Ethan on 16/4/28.

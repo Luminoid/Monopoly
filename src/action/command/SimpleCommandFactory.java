@@ -1,6 +1,6 @@
 package action.command;
 
-import view.impl.*;
+import gui.impl.*;
 
 /**
  * Created by Ethan on 16/4/30.
