@@ -1,20 +1,23 @@
 package gui.view;
 
 import action.command.CommandType;
+import action.command.ErrorCommand;
 import action.command.PromptCommand;
 import action.command.SimpleCommandFactory;
 import gui.ViewController;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import model.Dice;
 import model.Kernel;
 import model.Player;
+import model.card.Card;
+import model.card.SimpleCardFactory;
 import model.spot.SpotType;
 import util.PlayerUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Ethan on 16/6/18.
@@ -70,6 +73,41 @@ public class RootLayoutController {
     }
 
     @FXML
+    private void handleUseCardBtn(){
+        Player player = Kernel.getInstance().getCurrentPlayer();
+        ArrayList<Card> usableCards = new ArrayList<>();
+        player.getCards().keySet().stream().forEach(e -> usableCards.add(SimpleCardFactory.createCard(e)));
+        int cardNum = usableCards.size();
+        ErrorCommand errorCommand = (ErrorCommand) SimpleCommandFactory.createCommand(CommandType.ERROR_COMMAND);
+        if (cardNum == 0) {
+            errorCommand.setCommandStr("您现在没有道具卡可以使用！");
+        } else {
+            List<String> choices = new ArrayList<>();
+
+            for (int i = 0; i < cardNum; i++) {
+                choices.add(usableCards.get(i).getName() + " × " + player.getCards().get(usableCards.get(i).getCardType()));
+            }
+
+            ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(0), choices);
+            dialog.setTitle("选择");
+            dialog.setHeaderText(null);
+            dialog.setContentText("请选择要使用的卡片：");
+
+            Optional<String> result = dialog.showAndWait();
+
+            result.ifPresent(letter -> {
+                Card usedCard = usableCards.stream().filter(e -> e.getName().equals(letter.split(" ")[0])).findFirst().get();
+                if (usedCard.use(player)) {
+                    player.useCard(usedCard.getCardType());
+                    ViewController.repaint();
+                } else {
+                    errorCommand.setCommandStr("本情形不能使用该卡片！");
+                }
+            });
+        }
+    }
+
+    @FXML
     private void handleThrowDiceBtn() {
         Player currentPlayer = Kernel.getInstance().getCurrentPlayer();
         int diceValue = Dice.getInstance().rollDice();
@@ -77,9 +115,9 @@ public class RootLayoutController {
             int step;
             for (step = 0; step < diceValue; step++) {
                 if (PlayerUtil.getPlayerSpot(currentPlayer).getSpotType() == SpotType.BankSpot) {
-                    Platform.runLater(() -> {
+//                    Platform.runLater(() -> {
                         PlayerUtil.getPlayerSpot(currentPlayer).passByEvent(currentPlayer);
-                    });
+//                    });
                 } else if (PlayerUtil.getDistantSpot(currentPlayer, 1).isBlocked()) {
                     PlayerUtil.getDistantSpot(currentPlayer, 1).setBlocked(false);
                     currentPlayer.move();
@@ -106,7 +144,6 @@ public class RootLayoutController {
             PlayerUtil.getPlayerSpot(currentPlayer).arriveEvent(currentPlayer);
             ViewController.repaint();
             Kernel.getInstance().getSemaphore().release();
-
         }).start();
     }
 

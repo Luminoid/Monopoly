@@ -1,7 +1,7 @@
 package gui.menu;
 
 import javafx.application.Platform;
-import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -42,70 +42,53 @@ public class BankMenu {
     }
 
     private static void depositMoney(Player player) {
-
-            Dialog<Double> dialog = new Dialog();
+        Platform.runLater(() -> {
+            // Create the custom dialog.
+            Dialog<Double> dialog = new Dialog<>();
             dialog.setTitle("存款");
             dialog.setHeaderText("请输入您想存入的金额：");
+
+            // Set the button types.
             ButtonType okButtonType = new ButtonType("确认", ButtonBar.ButtonData.OK_DONE);
             dialog.getDialogPane().getButtonTypes().add(okButtonType);
+
+            // Create the content
             GridPane grid = new GridPane();
             grid.setHgap(10);
             grid.setVgap(10);
-            grid.setPadding(new Insets(20, 150, 10, 10));
+
             TextField value = new TextField();
             Label promptLabel = new Label();
             promptLabel.setTextFill(Color.RED);
+
             grid.add(new Label("金额:"), 0, 0);
             grid.add(value, 1, 0);
             grid.add(promptLabel, 0, 1, 2, 1);
+
+            // Enable/Disable ok button depending on whether a value was in the right format.
+            Node okButton = dialog.getDialogPane().lookupButton(okButtonType);
+            okButton.setDisable(false);
+
+            // Validation
             value.textProperty().addListener((observable, oldValue, newValue) -> {
                 if (!NumberUtil.isDouble(newValue)) {
                     promptLabel.textProperty().set("请输入正确地数字！");
+                    okButton.setDisable(true);
                 } else if (Double.parseDouble(newValue) > player.getCash()) {
                     promptLabel.textProperty().set("您没有足够的现金！");
+                    okButton.setDisable(true);
                 } else {
                     promptLabel.textProperty().set("");
+                    okButton.setDisable(false);
                 }
             });
 
             dialog.getDialogPane().setContent(grid);
-            // Request focus on the username field by default.
+
+            // Request focus on the value field by default.
             Platform.runLater(() -> value.requestFocus());
-            Optional<Double> result = dialog.showAndWait();
-            result.ifPresent(it -> {
-                System.out.println("aaa");
-                double num = Double.parseDouble(value.textProperty().get());
-                player.setCash(player.getCash() - num);
-                player.setDeposit(player.getDeposit() + num);
-            });
 
-    }
-
-    private static void withdrawMoney(Player player) {
-        Platform.runLater(() -> {
-            Dialog<Double> dialog = new Dialog();
-            dialog.setTitle("取款");
-            dialog.setHeaderText("请输入您想取出的金额：");
-            ButtonType okButtonType = new ButtonType("确认", ButtonBar.ButtonData.OK_DONE);
-            dialog.getDialogPane().getButtonTypes().add(okButtonType);
-            GridPane grid = new GridPane();
-            TextField value = new TextField();
-            Label promptLabel = new Label();
-            promptLabel.setTextFill(Color.RED);
-            grid.add(new Label("金额:"), 0, 0);
-            grid.add(value, 1, 0);
-            grid.add(promptLabel, 0, 1);
-            value.textProperty().addListener((observable, oldValue, newValue) -> {
-                if (!NumberUtil.isDouble(newValue)) {
-                    promptLabel.textProperty().set("请输入正确地数字！");
-                } else if (Double.parseDouble(newValue) > player.getDeposit()) {
-                    promptLabel.textProperty().set("您没有足够的存款！");
-                }
-            });
-
-            dialog.getDialogPane().setContent(grid);
-            // Request focus on the username field by default.
-            Platform.runLater(() -> value.requestFocus());
+            // Convert the result to a Double when the ok button is clicked.
             dialog.setResultConverter(dialogButton -> {
                 if (dialogButton == okButtonType) {
                     return Double.parseDouble(value.textProperty().get());
@@ -113,6 +96,71 @@ public class BankMenu {
                 return null;
             });
             Optional<Double> result = dialog.showAndWait();
+
+            result.ifPresent(it -> {
+                double num = Double.parseDouble(value.textProperty().get());
+                player.setCash(player.getCash() - num);
+                player.setDeposit(player.getDeposit() + num);
+            });
+        });
+    }
+
+    private static void withdrawMoney(Player player) {
+        Platform.runLater(() -> {
+            // Create the custom dialog.
+            Dialog<Double> dialog = new Dialog<>();
+            dialog.setTitle("取款");
+            dialog.setHeaderText("请输入您想取出的金额：");
+
+            // Set the button types.
+            ButtonType okButtonType = new ButtonType("确认", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().add(okButtonType);
+
+            // Create the content
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+
+            TextField value = new TextField();
+            Label promptLabel = new Label();
+            promptLabel.setTextFill(Color.RED);
+
+            grid.add(new Label("金额:"), 0, 0);
+            grid.add(value, 1, 0);
+            grid.add(promptLabel, 0, 1, 2, 1);
+
+            // Enable/Disable ok button depending on whether a value was in the right format.
+            Node okButton = dialog.getDialogPane().lookupButton(okButtonType);
+            okButton.setDisable(false);
+
+            // Validation
+            value.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (!NumberUtil.isDouble(newValue)) {
+                    promptLabel.textProperty().set("请输入正确地数字！");
+                    okButton.setDisable(true);
+                } else if (Double.parseDouble(newValue) > player.getDeposit()) {
+                    promptLabel.textProperty().set("您没有足够的存款！");
+                    okButton.setDisable(true);
+                } else {
+                    promptLabel.textProperty().set("");
+                    okButton.setDisable(false);
+                }
+            });
+
+            dialog.getDialogPane().setContent(grid);
+
+            // Request focus on the value field by default.
+            Platform.runLater(() -> value.requestFocus());
+
+            // Convert the result to a Double when the ok button is clicked.
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == okButtonType) {
+                    return Double.parseDouble(value.textProperty().get());
+                }
+                return null;
+            });
+            Optional<Double> result = dialog.showAndWait();
+
             result.ifPresent(it -> {
                 double num = Double.parseDouble(value.textProperty().get());
                 player.setCash(player.getCash() + num);

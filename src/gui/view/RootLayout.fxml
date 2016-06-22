@@ -11,57 +11,52 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="800.0"
-            style="-fx-background-color: #FAFAFA;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="gui.view.RootLayoutController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="800.0" style="-fx-background-color: #FAFAFA;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.view.RootLayoutController">
     <top>
         <TableView fx:id="playerTable" prefHeight="86.0" prefWidth="800.0" BorderPane.alignment="CENTER">
             <columns>
-                <TableColumn fx:id="playerNameColumn" prefWidth="75.0" text="玩家名"/>
-                <TableColumn fx:id="playerCashColumn" prefWidth="75.0" text="现金"/>
-                <TableColumn fx:id="playerDepositColumn" prefWidth="75.0" text="存款"/>
-                <TableColumn fx:id="playerTicketColumn" prefWidth="75.0" text="点券"/>
-                <TableColumn fx:id="playerEstateColumn" prefWidth="75.0" text="房产总额"/>
-                <TableColumn fx:id="playerAssetColumn" prefWidth="75.0" text="资产总额"/>
+                <TableColumn fx:id="playerNameColumn" prefWidth="75.0" text="玩家名" />
+                <TableColumn fx:id="playerCashColumn" prefWidth="75.0" text="现金" />
+                <TableColumn fx:id="playerDepositColumn" prefWidth="75.0" text="存款" />
+                <TableColumn fx:id="playerTicketColumn" prefWidth="75.0" text="点券" />
+                <TableColumn fx:id="playerEstateColumn" prefWidth="75.0" text="房产总额" />
+                <TableColumn fx:id="playerAssetColumn" prefWidth="75.0" text="资产总额" />
             </columns>
             <columnResizePolicy>
-                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
             </columnResizePolicy>
         </TableView>
     </top>
     <right>
-        <SplitPane dividerPositions="0.35688405797101447" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0"
-                   BorderPane.alignment="CENTER">
+        <SplitPane dividerPositions="0.35688405797101447" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                     <children>
-                        <VBox layoutX="8.0" layoutY="107.0" spacing="8.0" AnchorPane.bottomAnchor="8.0">
-                            <children>
-                                <HBox spacing="8.0">
-                                    <children>
-                                        <Button mnemonicParsing="false" text="使用道具"/>
-                                        <Button lineSpacing="4.0" mnemonicParsing="false" onAction="#initialize" text="进入股市"/>
-                                    </children>
-                                </HBox>
-                                <HBox spacing="8.0">
-                                    <children>
-                                        <Button mnemonicParsing="false" onAction="#handleThrowDiceBtn" text="扔骰子"/>
-                                        <Button mnemonicParsing="false" text="认输"/>
-                                    </children>
-                                </HBox>
-                            </children>
-                        </VBox>
-                        <Label layoutX="17.0" layoutY="15.0" text="当前玩家: "/>
-                        <Label layoutX="17.0" layoutY="33.0" text="方向: "/>
-                        <Label fx:id="playerLabel" layoutX="81.0" layoutY="15.0"/>
-                        <Label fx:id="orientationLabel" layoutX="80.0" layoutY="33.0"/>
+                  <VBox layoutX="8.0" layoutY="107.0" spacing="8.0" AnchorPane.bottomAnchor="8.0">
+                     <children>
+                        <HBox spacing="8.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#handleUseCardBtn" text="使用道具" />
+                                      <Button lineSpacing="4.0" mnemonicParsing="false" onAction="#initialize" text="进入股市" />
+                           </children>
+                        </HBox>
+                              <HBox spacing="8.0">
+                                  <children>
+                                      <Button mnemonicParsing="false" onAction="#handleThrowDiceBtn" text="扔骰子" />
+                                      <Button mnemonicParsing="false" text="认输" />
+                                  </children>
+                              </HBox>
+                     </children>
+                  </VBox>
+                        <Label layoutX="17.0" layoutY="15.0" text="当前玩家: " />
+                        <Label layoutX="17.0" layoutY="33.0" text="方向: " />
+                        <Label fx:id="playerLabel" layoutX="81.0" layoutY="15.0" />
+                        <Label fx:id="orientationLabel" layoutX="80.0" layoutY="33.0" />
                     </children>
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                     <children>
-                        <TextArea fx:id="promptTxt" editable="false" layoutX="-68.0" layoutY="63.0" prefHeight="425.0" prefWidth="200.0"
-                                  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                  AnchorPane.topAnchor="0.0"/>
+                        <TextArea fx:id="promptTxt" editable="false" layoutX="-68.0" layoutY="63.0" prefHeight="425.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                     </children>
                 </AnchorPane>
             </items>
