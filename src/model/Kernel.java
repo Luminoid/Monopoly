@@ -102,12 +102,12 @@ public class Kernel {
                 }
                 if (isGui) {
                     try {
-                        if (player.getInjureValue() == 0){
+                        if (player.getInjureValue() == 0) {
                             semaphore.acquire();
                         } else {
                             int injureValue = player.getInjureValue();
                             PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
-                            command.setCommandStr("玩家"+player.getName()+"受伤，还需停止" + injureValue + "回合");
+                            command.setCommandStr("玩家" + player.getName() + "受伤，还需停止" + injureValue + "回合");
                             player.setInjureValue(injureValue - 1);
                         }
                     } catch (Exception ex) {
@@ -142,10 +142,10 @@ public class Kernel {
         });
     }
 
-    public int findHospitalPosition(){
+    public int findHospitalPosition() {
         ArrayList<Spot> spots = map.getSpotList();
-        for (int i = 0; i < spots.size(); i++){
-            if (spots.get(i).getSpotType() == SpotType.HospitalSpot){
+        for (int i = 0; i < spots.size(); i++) {
+            if (spots.get(i).getSpotType() == SpotType.HospitalSpot) {
                 return i;
             }
         }

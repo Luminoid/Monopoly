@@ -18,9 +18,7 @@ import java.util.stream.Stream;
 public class NewsEvent extends Event {
     @Override
     public void toggle(Player player) {
-        // TODO: 16/6/22
-//        int newsIndex = (int) (Math.random() * 6);
-        int newsIndex = 6;
+        int newsIndex = (int) (Math.random() * 6);
         switch (newsIndex) {
             case 1:
                 newsOneOccur();
@@ -91,6 +89,6 @@ public class NewsEvent extends Event {
         player.setOrientation(PlayerOrientation.BACKWARD);
         ViewController.repaint();
         PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
-        command.setCommandStr("玩家 "+player.getName()+" 受伤，被送至医院！");
+        command.setCommandStr("玩家 " + player.getName() + " 受伤，被送至医院！");
     }
 }

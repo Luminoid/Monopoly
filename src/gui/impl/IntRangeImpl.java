@@ -12,7 +12,6 @@ import java.util.Optional;
 public class IntRangeImpl extends IntRangeRequest {
     @Override
     public void action() {
-
         Dialog<Integer> dialog = new Dialog();
         dialog.setTitle("请选择");
         dialog.setHeaderText(getQuestionStr());
@@ -30,17 +29,17 @@ public class IntRangeImpl extends IntRangeRequest {
         slider.setBlockIncrement(5);
         slider.setPrefWidth(240);
         Label sliderValue = new Label();
-        slider.valueProperty().addListener((observable, oldValue, newValue) -> sliderValue.setText(newValue.intValue()+""));
+        slider.valueProperty().addListener((observable, oldValue, newValue) -> sliderValue.setText(newValue.intValue() + ""));
         grid.add(slider, 0, 0);
         grid.add(sliderValue, 0, 1);
         dialog.getDialogPane().setContent(grid);
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == okButtonType) {
-                return (int)slider.getValue();
+                return (int) slider.getValue();
             }
             return null;
         });
         Optional<Integer> result = dialog.showAndWait();
-        result.ifPresent(it -> setAnswer((int)slider.getValue()));
+        result.ifPresent(it -> setAnswer((int) slider.getValue()));
     }
 }

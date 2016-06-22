@@ -1,6 +1,7 @@
 package gui.impl;
 
 import action.command.ErrorCommand;
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
 /**
@@ -9,11 +10,14 @@ import javafx.scene.control.Alert;
 public class ErrorImpl extends ErrorCommand {
     @Override
     public void action() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("错误");
-        alert.setHeaderText(null);
-        alert.setContentText(getCommandStr());
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("错误");
+            alert.setHeaderText(null);
+            alert.setContentText(getCommandStr());
 
-        alert.showAndWait();
+            alert.showAndWait();
+        });
+
     }
 }

@@ -29,6 +29,10 @@ public abstract class Spot {
         return spotInfo;
     }
 
+    public String getSpotInfoStr() {
+        return "地名：" + locName + "\n类型：" + typeName + "\n简介：" + description;
+    }
+
     public String getLocName() {
         return locName;
     }

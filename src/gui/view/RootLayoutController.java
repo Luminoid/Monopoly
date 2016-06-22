@@ -4,6 +4,7 @@ import action.command.CommandType;
 import action.command.PromptCommand;
 import action.command.SimpleCommandFactory;
 import gui.ViewController;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -72,11 +73,13 @@ public class RootLayoutController {
     private void handleThrowDiceBtn() {
         Player currentPlayer = Kernel.getInstance().getCurrentPlayer();
         int diceValue = Dice.getInstance().rollDice();
-        new Thread (() -> {
+        new Thread(() -> {
             int step;
             for (step = 0; step < diceValue; step++) {
                 if (PlayerUtil.getPlayerSpot(currentPlayer).getSpotType() == SpotType.BankSpot) {
-                    PlayerUtil.getPlayerSpot(currentPlayer).passByEvent(currentPlayer);
+                    Platform.runLater(() -> {
+                        PlayerUtil.getPlayerSpot(currentPlayer).passByEvent(currentPlayer);
+                    });
                 } else if (PlayerUtil.getDistantSpot(currentPlayer, 1).isBlocked()) {
                     PlayerUtil.getDistantSpot(currentPlayer, 1).setBlocked(false);
                     currentPlayer.move();
@@ -101,9 +104,16 @@ public class RootLayoutController {
             command.setCommandStr("玩家 " + currentPlayer.getName() + " 前进了" + step + "步");
 
             PlayerUtil.getPlayerSpot(currentPlayer).arriveEvent(currentPlayer);
+            ViewController.repaint();
             Kernel.getInstance().getSemaphore().release();
 
         }).start();
+    }
+
+    @FXML
+    private void handleGiveUpBtn() {
+        Kernel.getInstance().getCurrentPlayer().giveUp();
+        Kernel.getInstance().getSemaphore().release();
     }
 
     public void promptText(String s) {

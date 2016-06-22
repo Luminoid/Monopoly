@@ -16,6 +16,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import model.Kernel;
 import model.Player;
 import util.EstateAction;
+import util.FormatTool;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -106,12 +107,28 @@ public class EstateSpot extends Spot {
         spotInfo.add("街道：" + (this.streetName != null ? this.streetName : "无"));
         spotInfo.add("简介：" + getDescription());
         if (owner != null) {
+            spotInfo.add("房主：" + owner.getName());
             spotInfo.add("等级：" + level);
             spotInfo.add("过路费：" + getPassByPrice());
         } else {
             spotInfo.add("购买费：" + getPurchasingPrice());
         }
         return spotInfo;
+    }
+
+    @Override
+    public String getSpotInfoStr() {
+        String ret = "";
+        ret += ("地名：" + this.getLocName()) + ("\n类型：" + this.typeName)
+                + ("\n街道：" + (this.streetName != null ? this.streetName : "无"))
+                + ("\n简介：" + getDescription());
+        if (owner != null) {
+            ret += ("\n房主：" + owner.getName()) + ("\n等级：" + level.get()) +
+                    ("\n过路费：" + FormatTool.formatMoney(getPassByPrice()));
+        } else {
+            ret += ("\n购买费：" + getPurchasingPrice());
+        }
+        return ret;
     }
 
     public double getPurchasingPrice() {

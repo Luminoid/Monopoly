@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * Created by Ethan on 16/4/27.
  */
 public class Player {
-    private static int nextId = 1;
+    private static int nextId = 0;
 
     private StringProperty name;
     private int id;

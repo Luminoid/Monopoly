@@ -3,7 +3,6 @@ package model.map;
 import model.Kernel;
 import model.spot.EstateSpot;
 import model.spot.Spot;
-import model.spot.SpotType;
 
 /**
  * Created by Ethan on 16/6/20.
@@ -65,18 +64,14 @@ public class MapConstructor {
         return mapShape;
     }
 
-    public static String[][] constructDetailedMap() {
+    public static Spot[][] constructDetailedMap() {
         RegMap map = (RegMap) Kernel.getInstance().getMap();
-        String[][] mapShape = new String[map.getHeight()][map.getWidth()];
+        Spot[][] mapShape = new Spot[map.getHeight()][map.getWidth()];
         for (int i = 0; i < map.getHeight(); i++)
             for (int j = 0; j < map.getWidth(); j++)
-                mapShape[i][j] = BLANK;
+                mapShape[i][j] = null;
         map.getSpotList().stream().forEach(e -> {
-            if (e.getSpotType() == SpotType.EstateSpot) {
-                mapShape[map.spotLoc.get(e).getY()][map.spotLoc.get(e).getX()] = ((EstateSpot) e).getLevel() + "";
-            } else {
-                mapShape[map.spotLoc.get(e).getY()][map.spotLoc.get(e).getX()] = getSpotTag(e);
-            }
+            mapShape[map.spotLoc.get(e).getY()][map.spotLoc.get(e).getX()] = e;
         });
         return mapShape;
     }

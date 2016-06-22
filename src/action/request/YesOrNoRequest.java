@@ -11,6 +11,7 @@ public abstract class YesOrNoRequest implements Request<Boolean> {
     private String questionStr;
     private boolean answer;
     private Semaphore lock;
+
     public String getQuestionStr() {
         return questionStr;
     }
@@ -23,7 +24,7 @@ public abstract class YesOrNoRequest implements Request<Boolean> {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Platform.runLater(()->action());
+        Platform.runLater(() -> action());
     }
 
     @Override
@@ -33,7 +34,7 @@ public abstract class YesOrNoRequest implements Request<Boolean> {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        boolean retValue =  answer;
+        boolean retValue = answer;
         lock.release();
         return retValue;
     }

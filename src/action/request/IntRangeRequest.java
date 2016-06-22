@@ -13,6 +13,7 @@ public abstract class IntRangeRequest implements Request<Integer> {
     protected int floor;
     protected int ceiling;
     private Semaphore lock;
+
     @Override
     public Integer getAnswer() {
         try {
@@ -37,12 +38,12 @@ public abstract class IntRangeRequest implements Request<Integer> {
     public void setQuestionStr(String questionStr) {
         this.questionStr = questionStr;
         lock = new Semaphore(0);
-        try{
+        try {
             lock.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        Platform.runLater(()->action());
+        Platform.runLater(() -> action());
     }
 
     public IntRangeRequest setFloor(int floor) {

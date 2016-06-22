@@ -12,11 +12,11 @@ import java.util.function.Function;
  * Created by Ethan on 16/6/21.
  */
 public class NumberUtil {
-    public static boolean isDouble(String s){
+    public static boolean isDouble(String s) {
         try {
             Double.parseDouble(s);
             return true;
-        }catch (NumberFormatException ex){
+        } catch (NumberFormatException ex) {
             return false;
         }
     }

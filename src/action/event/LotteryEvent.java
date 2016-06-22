@@ -17,6 +17,7 @@ public class LotteryEvent extends Event {
         if (player.getCash() >= 100) {
             YesOrNoRequest request = (YesOrNoRequest) SimpleCommandFactory.createCommand(CommandType.YES_OR_NO_REQUEST);
             request.setQuestionStr("您现在位于彩票店，是否花费¥100购买彩票？");
+            System.out.println(request.getAnswer());
             if (request.getAnswer()) {
                 IntRangeRequest intRangeRequest = (IntRangeRequest) SimpleCommandFactory.createCommand(CommandType.INT_RANGE_REQUEST);
                 intRangeRequest.setFloor(0).setCeiling(99).setQuestionStr("请输入您要购买的点数(0~99)：");

@@ -7,10 +7,10 @@ import gui.init.InitViewController;
 import gui.view.MapViewController;
 import gui.view.RootLayoutController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -55,6 +55,7 @@ public class ViewController extends Application {
             initViewController.setViewController(this);
 
             primaryStage.show();
+            primaryStage.setOnCloseRequest(e -> System.exit(0));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,20 +91,18 @@ public class ViewController extends Application {
 
     public void showMapView() {
         mapView = new Group();
-        Canvas canvas = new Canvas(556, 546);
-        gc = canvas.getGraphicsContext2D();
         mapViewController = new MapViewController();
-        mapViewController.drawMap(gc);
-        mapView.getChildren().add(canvas);
+        mapViewController.drawMap(mapView);
 
         // Set person overview into the center of root layout.
         rootLayout.setCenter(mapView);
 
     }
 
-    public static void repaint(){
-        gc.clearRect(0, 0, 556, 546);
-        mapViewController.drawMap(ViewController.getGc());
+    public static void repaint() {
+        Platform.runLater(() -> {
+            mapViewController.drawMap(mapView);
+        });
     }
 
     public BorderPane getRootLayout() {
