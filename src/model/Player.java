@@ -34,6 +34,7 @@ public class Player {
     private Hashtable<CardType, Integer> cards;
     private Hashtable<Stock, Integer> stocks;
     private boolean isBankrupt;
+    private int injureValue;
 
     public Player() {
         this(null, 0.0);
@@ -51,6 +52,7 @@ public class Player {
         this.cards = new Hashtable<>();
         this.stocks = new Hashtable<>();
         this.isBankrupt = false;
+        this.injureValue = 0;
     }
 
     public void move() {
@@ -179,6 +181,10 @@ public class Player {
         return position.get();
     }
 
+    public void setPosition(int position) {
+        this.position.set(position);
+    }
+
     public void addPosition(int distance) {
         int mapSize = Kernel.getInstance().getMap().getSize();
         position.set(position.get() + FormatTool.distanceWithOrientation(this, distance));
@@ -206,7 +212,11 @@ public class Player {
         return orientation;
     }
 
-    public void setOrientation() {
+    public void setOrientation(PlayerOrientation orientation) {
+        this.orientation = orientation;
+    }
+
+    public void changeOrientation() {
         orientation = (orientation == PlayerOrientation.FORWARD ? PlayerOrientation.BACKWARD : PlayerOrientation.FORWARD);
     }
 
@@ -268,5 +278,13 @@ public class Player {
 
     public void setBankrupt(boolean bankrupt) {
         isBankrupt = bankrupt;
+    }
+
+    public int getInjureValue() {
+        return injureValue;
+    }
+
+    public void setInjureValue(int injureValue) {
+        this.injureValue = injureValue;
     }
 }

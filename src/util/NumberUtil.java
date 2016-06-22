@@ -12,6 +12,15 @@ import java.util.function.Function;
  * Created by Ethan on 16/6/21.
  */
 public class NumberUtil {
+    public static boolean isDouble(String s){
+        try {
+            Double.parseDouble(s);
+            return true;
+        }catch (NumberFormatException ex){
+            return false;
+        }
+    }
+
     public static <T> DoubleBinding sum(ObservableList<T> list, Function<T, DoubleBinding> getNumber) {
         DoubleBinding result = Bindings.createDoubleBinding(() -> list.stream().map(getNumber)
                 .map(DoubleBinding::get)

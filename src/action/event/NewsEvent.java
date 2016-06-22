@@ -3,10 +3,12 @@ package action.event;
 import action.command.CommandType;
 import action.command.PromptCommand;
 import action.command.SimpleCommandFactory;
+import gui.ViewController;
 import model.Kernel;
 import model.Player;
 import model.card.Card;
 import util.FormatTool;
+import util.PlayerOrientation;
 
 import java.util.stream.Stream;
 
@@ -16,7 +18,9 @@ import java.util.stream.Stream;
 public class NewsEvent extends Event {
     @Override
     public void toggle(Player player) {
-        int newsIndex = (int) (Math.random() * 5);
+        // TODO: 16/6/22
+//        int newsIndex = (int) (Math.random() * 6);
+        int newsIndex = 6;
         switch (newsIndex) {
             case 1:
                 newsOneOccur();
@@ -32,6 +36,9 @@ public class NewsEvent extends Event {
                 break;
             case 5:
                 newsFiveOccur();
+                break;
+            case 6:
+                newsSixOccur(player);
                 break;
         }
     }
@@ -76,5 +83,14 @@ public class NewsEvent extends Event {
         Kernel.getInstance().getPlayers().forEach(e -> e.addCard(Card.generateCard()));
         PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
         command.setCommandStr("每个人得到一张卡片");
+    }
+
+    private static void newsSixOccur(Player player) {
+        player.setPosition(Kernel.getInstance().getHospitalPosition());
+        player.setInjureValue(2);
+        player.setOrientation(PlayerOrientation.BACKWARD);
+        ViewController.repaint();
+        PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
+        command.setCommandStr("玩家 "+player.getName()+" 受伤，被送至医院！");
     }
 }

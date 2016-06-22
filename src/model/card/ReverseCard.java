@@ -18,7 +18,7 @@ public class ReverseCard extends Card {
 
     @Override
     public boolean use(Player player) {
-        player.setOrientation();
+        player.changeOrientation();
         PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
         command.setCommandStr("您使用了转向卡");
         return true;

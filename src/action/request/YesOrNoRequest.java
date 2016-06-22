@@ -23,7 +23,6 @@ public abstract class YesOrNoRequest implements Request<Boolean> {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("YesOrNo");
         Platform.runLater(()->action());
     }
 

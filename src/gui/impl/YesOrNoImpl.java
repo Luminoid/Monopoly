@@ -20,7 +20,6 @@ public class YesOrNoImpl extends YesOrNoRequest {
         }
     }
 
-    private boolean retValue;
     public boolean yesOrNoRequest(String s) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("请选择");

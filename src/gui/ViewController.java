@@ -55,28 +55,6 @@ public class ViewController extends Application {
             initViewController.setViewController(this);
 
             primaryStage.show();
-
-//            Dialog<Integer> dialog = new Dialog();
-//            dialog.setTitle("请选择");
-//            dialog.setHeaderText("getString");
-//            ButtonType okButtonType = new ButtonType("确认", ButtonBar.ButtonData.OK_DONE);
-//            dialog.getDialogPane().getButtonTypes().add(okButtonType);
-//            GridPane grid = new GridPane();
-//            Slider slider = new Slider();
-//            slider.setMin(0);
-//            slider.setMax(100);
-//            slider.setValue(40);
-//            slider.setShowTickLabels(true);
-//            slider.setShowTickMarks(true);
-//            slider.setMajorTickUnit(50);
-//            slider.setMinorTickCount(5);
-//            slider.setBlockIncrement(10);
-//            grid.add(slider, 0, 0);
-//            Optional<ButtonType> result = dialog.showAndWait();
-//            if (result.isPresent() && result.get() == ButtonType.OK) {
-//                System.out.println("aaa");
-//            }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -121,6 +99,11 @@ public class ViewController extends Application {
         // Set person overview into the center of root layout.
         rootLayout.setCenter(mapView);
 
+    }
+
+    public static void repaint(){
+        gc.clearRect(0, 0, 556, 546);
+        mapViewController.drawMap(ViewController.getGc());
     }
 
     public BorderPane getRootLayout() {

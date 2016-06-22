@@ -28,7 +28,7 @@ public class TuiInput {
                 System.out.print(">> ");
                 return Double.parseDouble(scanner.nextLine().trim());
             } catch (NumberFormatException ex) {
-                System.out.println("格式错误，请输入整数：");
+                System.out.println("格式错误，请输入数字：");
             }
         }
     }

@@ -80,8 +80,7 @@ public class RootLayoutController {
                 } else if (PlayerUtil.getDistantSpot(currentPlayer, 1).isBlocked()) {
                     PlayerUtil.getDistantSpot(currentPlayer, 1).setBlocked(false);
                     currentPlayer.move();
-                    ViewController.getGc().clearRect(0, 0, 556, 546);
-                    ViewController.getMapViewController().drawMap(ViewController.getGc());
+                    ViewController.repaint();
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
@@ -91,8 +90,7 @@ public class RootLayoutController {
                     break;
                 }
                 currentPlayer.move();
-                ViewController.getGc().clearRect(0, 0, 556, 546);
-                ViewController.getMapViewController().drawMap(ViewController.getGc());
+                ViewController.repaint();
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {

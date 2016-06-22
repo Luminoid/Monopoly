@@ -13,6 +13,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.card.CardType;
 import model.map.MapGenerator;
+import model.spot.Spot;
+import model.spot.SpotType;
 import model.stock.StockGenerator;
 import model.stock.StockMarket;
 import tui.menu.MainMenu;
@@ -20,6 +22,7 @@ import util.DateTool;
 import util.PlayerOrientation;
 import util.PlayerUtil;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
@@ -35,6 +38,7 @@ public class Kernel {
     private GregorianCalendar endDate;
     private model.map.Map map;
     private StockMarket stockMarket;
+    private int hospitalPosition;
     private boolean isGui;
     private ObjectProperty<Player> currentPlayer;
     private ObjectProperty<PlayerOrientation> currentOrientation;
@@ -49,6 +53,7 @@ public class Kernel {
         endDate = new GregorianCalendar();
         map = MapGenerator.generate();
         stockMarket = StockGenerator.generate();
+        hospitalPosition = findHospitalPosition();
         currentPlayer = new SimpleObjectProperty<>(new Player());
         currentOrientation = new SimpleObjectProperty<>(PlayerOrientation.FORWARD);
         this.isGui = isGui;
@@ -97,7 +102,14 @@ public class Kernel {
                 }
                 if (isGui) {
                     try {
-                        semaphore.acquire();
+                        if (player.getInjureValue() == 0){
+                            semaphore.acquire();
+                        } else {
+                            int injureValue = player.getInjureValue();
+                            PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
+                            command.setCommandStr("玩家"+player.getName()+"受伤，还需停止" + injureValue + "回合");
+                            player.setInjureValue(injureValue - 1);
+                        }
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
@@ -120,6 +132,24 @@ public class Kernel {
         }).get();
         FindWinnerCommand command = (FindWinnerCommand) SimpleCommandFactory.createCommand(CommandType.FIND_WINNER_COMMAND);
         command.setCommandStr(winner.getName());
+    }
+
+    public void addCards() {
+        players.stream().map(Player::getCards).forEach(e -> {
+            for (CardType cardType : CardType.values()) {
+                e.put(cardType, 10);
+            }
+        });
+    }
+
+    public int findHospitalPosition(){
+        ArrayList<Spot> spots = map.getSpotList();
+        for (int i = 0; i < spots.size(); i++){
+            if (spots.get(i).getSpotType() == SpotType.HospitalSpot){
+                return i;
+            }
+        }
+        return 0;
     }
 
     public model.map.Map getMap() {
@@ -158,12 +188,8 @@ public class Kernel {
         players.add(player);
     }
 
-    public void addCards() {
-        players.stream().map(Player::getCards).forEach(e -> {
-            for (CardType cardType : CardType.values()) {
-                e.put(cardType, 10);
-            }
-        });
+    public int getHospitalPosition() {
+        return hospitalPosition;
     }
 
     public PlayerOrientation getCurrentOrientation() {
