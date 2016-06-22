@@ -1,6 +1,6 @@
 package gui.impl;
 
-import action.request.IntRangeRequest;
+import action.request.IntRangeRequestWithLock;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
@@ -9,7 +9,7 @@ import java.util.Optional;
 /**
  * Created by Ethan on 16/4/30.
  */
-public class IntRangeImpl extends IntRangeRequest {
+public class IntRangeImplWithLock extends IntRangeRequestWithLock {
     @Override
     public void action() {
         Dialog<Integer> dialog = new Dialog<>();

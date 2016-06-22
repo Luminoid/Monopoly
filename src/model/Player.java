@@ -65,7 +65,7 @@ public class Player {
         this.getHouses().clear();
         this.isBankrupt = true;
         PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
-        command.setCommandStr(name + "已认输");
+        command.setCommandStr(name.get() + "已认输");
     }
 
     public StringProperty nameProperty() {

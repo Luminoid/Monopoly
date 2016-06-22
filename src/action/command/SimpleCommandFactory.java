@@ -27,6 +27,9 @@ public class SimpleCommandFactory {
             case INT_RANGE_REQUEST:
                 command = new IntRangeImpl();
                 break;
+            case INT_RANGE_REQUEST_WITH_LOCK:
+                command = new IntRangeImplWithLock();
+                break;
         }
         return command;
     }

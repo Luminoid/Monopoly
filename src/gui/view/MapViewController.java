@@ -93,10 +93,20 @@ public class MapViewController {
                     Tooltip t = new Tooltip(mapShape[i][j].getSpotInfoStr());
                     Tooltip.install(image, t);
                     mapView.getChildren().add(image);
+
+                    // Block
+                    if(mapShape[i][j].isBlocked()){
+                        ImageView blockImage;
+                        blockImage = new ImageView("res/Block.png");
+                        blockImage.setLayoutX(j * 50);
+                        blockImage.setLayoutY(i * 50);
+                        blockImage.setFitWidth(50);
+                        blockImage.setFitHeight(50);
+                        mapView.getChildren().add(blockImage);
+                    }
                 }
             }
         }
-
 
         Kernel.getInstance().getPlayers().stream().forEach(e -> {
             Circle circle = new Circle();

@@ -43,7 +43,7 @@
                               <HBox spacing="8.0">
                                   <children>
                                       <Button mnemonicParsing="false" onAction="#handleThrowDiceBtn" text="扔骰子" />
-                                      <Button mnemonicParsing="false" text="认输" />
+                                      <Button mnemonicParsing="false" onAction="#handleGiveUpBtn" text="认输" />
                                   </children>
                               </HBox>
                      </children>

@@ -1,6 +1,6 @@
 package tui.impl;
 
-import action.request.IntRangeRequest;
+import action.request.IntRangeRequestWithLock;
 import tui.util.TuiInput;
 
 import java.util.Scanner;
@@ -8,7 +8,7 @@ import java.util.Scanner;
 /**
  * Created by Ethan on 16/4/30.
  */
-public class IntRangeImpl extends IntRangeRequest {
+public class IntRangeImpl extends IntRangeRequestWithLock {
     @Override
     public void action() {
         System.out.println(getQuestionStr());
