@@ -26,7 +26,7 @@
           <NumberAxis label="天" side="BOTTOM" lowerBound="0" upperBound="50" tickUnit="2"/>
         </xAxis>
         <yAxis>
-          <NumberAxis label="单价" side="LEFT" lowerBound="0" upperBound="40" tickUnit="2"/>
+          <NumberAxis label="单价" side="LEFT" lowerBound="0" upperBound="50" tickUnit="2"/>
         </yAxis>
       </LineChart>
       <TableView fx:id="stockTable" onMouseClicked="#showTrend" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">

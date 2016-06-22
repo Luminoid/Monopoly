@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 public class NewsEvent extends Event {
     @Override
     public void toggle(Player player) {
-        int newsIndex = (int) (Math.random() * 6);
+        int newsIndex = (int) (Math.random() * 7);
         switch (newsIndex) {
             case 1:
                 newsOneOccur();
