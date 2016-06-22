@@ -1,120 +1,220 @@
 package gui.menu;
 
+import gui.ViewController;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import model.Kernel;
 import model.Player;
-import tui.util.TuiInput;
-import tui.util.TuiOutput;
+import model.stock.Stock;
 import util.FormatTool;
+import util.NumberUtil;
 
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.Optional;
 
 /**
  * Created by Ethan on 16/5/1.
  */
 public class StockMenu {
-    public static void displayStockMenu(Player player) {
-        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-        System.out.println("欢迎进入股票系统");
+    private ViewController viewController;
 
-        while (true) {
-            System.out.println("您现在可以执行以下操作：");
-            System.out.println("1 - 查看交易市场里的所有股票");
-            System.out.println("2 - 查看自己持有的所有股票");
-            System.out.println("3 - 买股票");
-            System.out.println("4 - 卖股票");
-            System.out.println("0 - 退出");
+    @FXML
+    private TableView<Stock> stockTable;
 
-            int choiceNum = TuiInput.readInt(new Scanner(System.in), 0, 4);
-            switch (choiceNum) {
-                case 1:
-                    displayAllStocks();
-                    break;
-                case 2:
-                    displayOwnStocks(player);
-                    break;
-                case 3:
-                    buyStockMenu(player);
-                    break;
-                case 4:
-                    sellStockMenu(player);
-                    break;
-                case 0:
-                    return;
-            }
-        }
+    @FXML
+    private TableColumn<Stock, String> stockIndexColumn;
+
+    @FXML
+    private TableColumn<Stock, String> stockNameColumn;
+
+    @FXML
+    private TableColumn<Stock, String> stockPriceColumn;
+
+    @FXML
+    private TableColumn<Stock, String> stockFloatRateColumn;
+
+    @FXML
+    private TableColumn<Stock, String> stockHoldingNumColumn;
+
+    @FXML
+    private LineChart<Integer, Double> stockTrend;
+
+    @FXML
+    private void initialize() {
+        stockTable.setItems(Kernel.getInstance().getStockMarket().getStocks());
+
+        stockIndexColumn.setCellValueFactory(cellData -> cellData.getValue().idProperty().asString());
+        stockNameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        stockPriceColumn.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asString("%.1f"));
+        stockFloatRateColumn.setCellValueFactory(cellData -> cellData.getValue().getFloatRateBinding());
     }
 
-    public static void displayAllStocks() {
-        System.out.println("序号\t\t\t\t股票名\t\t\t每股单价\t\t\t涨跌幅");
-        Kernel.getInstance().getStockMarket().getStocks().forEach(e -> {
-            String[] info = new String[4];
-            info[0] = e.getId() + "";
-            info[1] = e.getName();
-            info[2] = FormatTool.formatMoney(e.getPrice());
-            info[3] = FormatTool.formatRate(e.getFloatRate());
-            Arrays.asList(info).stream().forEach(TuiOutput::printTable);
-            System.out.println();
+    @FXML
+    private void showMyHoldingBtn(){
+        stockHoldingNumColumn.setCellValueFactory(cellData ->
+                cellData.getValue().getHoldingNumProperty().asString("%.1f"));
+    }
+
+    @FXML
+    private void buyStockBtn(){
+        Platform.runLater(() -> {
+            Stock stock = stockTable.getSelectionModel().getSelectedItem();
+            if (stock != null){
+                Player player = Kernel.getInstance().getCurrentPlayer();
+                // Create the custom dialog.
+                Dialog<Double> dialog = new Dialog<>();
+                dialog.setTitle("买股票");
+                dialog.setHeaderText("请输入您想买入的数量（每股 ¥"+ FormatTool.formatMoney(stock.getPrice())+"）：");
+
+                // Set the button types.
+                ButtonType okButtonType = new ButtonType("购买", ButtonBar.ButtonData.OK_DONE);
+                dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+
+                // Create the content
+                GridPane grid = new GridPane();
+                grid.setHgap(10);
+                grid.setVgap(10);
+
+                TextField value = new TextField();
+                Label promptLabel = new Label();
+                promptLabel.setTextFill(Color.RED);
+
+                grid.add(value, 0, 0);
+                grid.add(promptLabel, 0, 1);
+
+                // Enable/Disable ok button depending on whether a value was in the right format.
+                Node okButton = dialog.getDialogPane().lookupButton(okButtonType);
+                okButton.setDisable(false);
+
+                // Validation
+                value.textProperty().addListener((observable, oldValue, newValue) -> {
+                    if (!NumberUtil.isInt(newValue)) {
+                        promptLabel.textProperty().set("请输入正确的数字！");
+                        okButton.setDisable(true);
+                    } else if (Integer.parseInt(newValue) * stock.getPrice() > player.getCash()) {
+                        promptLabel.textProperty().set("您没有足够的现金！");
+                        okButton.setDisable(true);
+                    } else {
+                        promptLabel.textProperty().set("");
+                        okButton.setDisable(false);
+                    }
+                });
+
+                dialog.getDialogPane().setContent(grid);
+
+                // Request focus on the value field by default.
+                Platform.runLater(() -> value.requestFocus());
+
+                // Convert the result to a Double when the ok button is clicked.
+                dialog.setResultConverter(dialogButton -> {
+                    if (dialogButton == okButtonType) {
+                        return Double.parseDouble(value.textProperty().get());
+                    }
+                    return null;
+                });
+                Optional<Double> result = dialog.showAndWait();
+
+                result.ifPresent(it -> {
+                    int num = Integer.parseInt(value.textProperty().get());
+                    Kernel.getInstance().getStockMarket().buyStock(player, stock.getId(), num);
+                });
+            }
         });
     }
 
-    public static void displayOwnStocks(Player player) {
-        if (player.getStocks().keySet().size() == 0) {
-            System.out.println("您手头没有股票");
-            return;
-        }
-        System.out.println("序号\t\t\t\t股票名\t\t\t每股单价\t\t\t涨跌幅\t\t\t持有数");
-        player.getStocks().keySet().forEach(e -> {
-            String[] info = new String[5];
-            info[0] = e.getId() + "";
-            info[1] = e.getName();
-            info[2] = FormatTool.formatMoney(e.getPrice());
-            info[3] = FormatTool.formatRate(e.getFloatRate());
-            info[4] = player.getStocks().get(e) + "";
-            Arrays.asList(info).stream().forEach(TuiOutput::printTable);
-            System.out.println();
+    @FXML
+    private void sellStockBtn(){
+        Platform.runLater(() -> {
+            Stock stock = stockTable.getSelectionModel().getSelectedItem();
+            if (stock != null){
+                Player player = Kernel.getInstance().getCurrentPlayer();
+                // Create the custom dialog.
+                Dialog<Double> dialog = new Dialog<>();
+                dialog.setTitle("卖股票");
+                dialog.setHeaderText("请输入您想卖出的数量（每股 ¥"+ FormatTool.formatMoney(stock.getPrice())+"）：");
+
+                // Set the button types.
+                ButtonType okButtonType = new ButtonType("卖出", ButtonBar.ButtonData.OK_DONE);
+                dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+
+                // Create the content
+                GridPane grid = new GridPane();
+                grid.setHgap(10);
+                grid.setVgap(10);
+
+                TextField value = new TextField();
+                Label promptLabel = new Label();
+                promptLabel.setTextFill(Color.RED);
+
+                grid.add(value, 0, 0);
+                grid.add(promptLabel, 0, 1);
+
+                // Enable/Disable ok button depending on whether a value was in the right format.
+                Node okButton = dialog.getDialogPane().lookupButton(okButtonType);
+                okButton.setDisable(false);
+
+                // Validation
+                value.textProperty().addListener((observable, oldValue, newValue) -> {
+                    if (!NumberUtil.isInt(newValue)) {
+                        promptLabel.textProperty().set("请输入正确的数字！");
+                        okButton.setDisable(true);
+                    } else {
+                        promptLabel.textProperty().set("");
+                        okButton.setDisable(false);
+                    }
+                });
+
+                dialog.getDialogPane().setContent(grid);
+
+                // Request focus on the value field by default.
+                Platform.runLater(() -> value.requestFocus());
+
+                // Convert the result to a Double when the ok button is clicked.
+                dialog.setResultConverter(dialogButton -> {
+                    if (dialogButton == okButtonType) {
+                        return Double.parseDouble(value.textProperty().get());
+                    }
+                    return null;
+                });
+                Optional<Double> result = dialog.showAndWait();
+
+                result.ifPresent(it -> {
+                    int num = Integer.parseInt(value.textProperty().get());
+                    Kernel.getInstance().getStockMarket().sellStock(player, stock.getId(), num);
+                });
+            }
         });
     }
 
-    public static void buyStockMenu(Player player) {
-        while (true) {
-            try {
-                System.out.println("格式：b x n  -->  买入序号为x的股票n股");
-                System.out.print(">> ");
-                String s = new Scanner(System.in).nextLine().trim();
-                String[] sArr = s.split(" ");
-                if (sArr[0].equals("b")) {
-                    if (Kernel.getInstance().getStockMarket().
-                            buyStock(player, Integer.parseInt(sArr[1]), Integer.parseInt(sArr[2]))) {
-                        return;
-                    }
-                } else {
-                    System.out.println("输入格式错误");
-                }
-            } catch (Exception ex) {
-                System.out.println("输入格式错误");
-            }
+    @FXML
+    private void showTrend(){
+        stockTrend.getData().clear();
+        Stock stock = stockTable.getSelectionModel().getSelectedItem();
+        ObservableList<XYChart.Series<Integer, Double>> lineChartData = FXCollections.observableArrayList();
+        LineChart.Series<Integer, Double> series = new LineChart.Series<>();
+        series.setName(stock.getName());
+
+        for (int i = 0; i < stock.getPriceRecord().size(); i++){
+            series.getData().add(new XYChart.Data<>(i, stock.getPriceRecord().get(i)));
         }
+        lineChartData.add(series);
+        stockTrend.setData(lineChartData);
+        stockTrend.createSymbolsProperty();
     }
 
-    public static void sellStockMenu(Player player) {
-        while (true) {
-            try {
-                System.out.println("格式：s x n  -->  卖出序号为x的股票n股");
-                System.out.print(">> ");
-                String s = new Scanner(System.in).nextLine().trim();
-                String[] sArr = s.split(" ");
-                if (sArr[0].equals("s")) {
-                    if (Kernel.getInstance().getStockMarket().
-                            sellStock(player, Integer.parseInt(sArr[1]), Integer.parseInt(sArr[2]))) {
-                        return;
-                    }
-                } else {
-                    System.out.println("输入格式错误");
-                }
-            } catch (Exception ex) {
-                System.out.println("输入格式错误");
-            }
-        }
+    @FXML
+    private void exitBtn(){
+        viewController.showMainView();
+    }
+
+    public void setViewController(ViewController viewController) {
+        this.viewController = viewController;
     }
 }

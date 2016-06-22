@@ -1,22 +1,27 @@
 package model.stock;
 
-import java.util.ArrayList;
+import javafx.beans.binding.StringBinding;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import model.Kernel;
+
 import java.util.Random;
 
 /**
  * Created by Ethan on 16/5/1.
  */
 public class Stock {
-    private int id;
-    private String name;
-    private double price;
-    private ArrayList<Double> priceRecord;
+    private IntegerProperty id;
+    private StringProperty name;
+    private DoubleProperty price;
+    private ObservableList<Double> priceRecord;
 
     public Stock(int id, String name, double price) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        priceRecord = new ArrayList<>();
+        this.id = new SimpleIntegerProperty(id);
+        this.name = new SimpleStringProperty(name);
+        this.price = new SimpleDoubleProperty(price);
+        priceRecord = FXCollections.observableArrayList();
     }
 
     public void change() {
@@ -42,31 +47,60 @@ public class Stock {
             }
         }
 
-        setPrice(price * (1 + rate));
+        setPrice(price.get() * (1 + rate));
+    }
+
+    public IntegerProperty getHoldingNumProperty(){
+        return Kernel.getInstance().getCurrentPlayer().getStocks().get(this);
     }
 
     public double getFloatRate() {
         if (priceRecord.size() >= 2) {
-            return (price - priceRecord.get(priceRecord.size() - 2)) / priceRecord.get(priceRecord.size() - 2);
+            return (price.get() - priceRecord.get(priceRecord.size() - 2)) / priceRecord.get(priceRecord.size() - 2);
         } else {
             return 0;
         }
     }
 
-    public void setPrice(double price) {
-        this.price = price;
-        priceRecord.add(price);
+    public StringBinding getFloatRateBinding(){
+        if (priceRecord.size() >= 2) {
+            return (price.subtract(priceRecord.get(priceRecord.size() - 2))).divide(priceRecord.get(priceRecord.size() - 2)).
+                    multiply(100).asString("%.1f");
+        } else {
+            return new SimpleDoubleProperty(0).asString();
+        }
     }
 
     public int getId() {
+        return id.get();
+    }
+
+    public IntegerProperty idProperty() {
         return id;
     }
 
     public String getName() {
+        return name.get();
+    }
+
+    public StringProperty nameProperty() {
         return name;
     }
 
     public double getPrice() {
+        return price.get();
+    }
+
+    public DoubleProperty priceProperty() {
         return price;
+    }
+
+    public void setPrice(double price) {
+        this.price.set(price);
+        priceRecord.add(price);
+    }
+
+    public ObservableList<Double> getPriceRecord() {
+        return priceRecord;
     }
 }

@@ -37,7 +37,7 @@
                         <HBox spacing="8.0">
                            <children>
                               <Button mnemonicParsing="false" onAction="#handleUseCardBtn" text="使用道具" />
-                                      <Button lineSpacing="4.0" mnemonicParsing="false" onAction="#initialize" text="进入股市" />
+                                      <Button lineSpacing="4.0" mnemonicParsing="false" onAction="#handleEnterStockMarketBtn" text="进入股市" />
                            </children>
                         </HBox>
                               <HBox spacing="8.0">

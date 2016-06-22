@@ -23,6 +23,8 @@ import java.util.Optional;
  * Created by Ethan on 16/6/18.
  */
 public class RootLayoutController {
+    private ViewController viewController;
+
     @FXML
     private TableView<Player> playerTable;
 
@@ -68,10 +70,6 @@ public class RootLayoutController {
         orientationLabel.textProperty().bind(Kernel.getInstance().getCurrentOrientationString());
     }
 
-    public static void initializePlayerInfo() {
-
-    }
-
     @FXML
     private void handleUseCardBtn(){
         Player player = Kernel.getInstance().getCurrentPlayer();
@@ -105,6 +103,11 @@ public class RootLayoutController {
                 }
             });
         }
+    }
+
+    @FXML
+    private void handleEnterStockMarketBtn(){
+        viewController.showStockMenu();
     }
 
     @FXML
@@ -155,5 +158,9 @@ public class RootLayoutController {
 
     public void promptText(String s) {
         promptTxt.appendText(s + "\n");
+    }
+
+    public void setViewController(ViewController viewController) {
+        this.viewController = viewController;
     }
 }

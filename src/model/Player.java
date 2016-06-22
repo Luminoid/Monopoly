@@ -32,7 +32,7 @@ public class Player {
     private IntegerProperty ticket;
     private ObservableList<EstateSpot> houses;
     private Hashtable<CardType, Integer> cards;
-    private Hashtable<Stock, Integer> stocks;
+    private Hashtable<Stock, IntegerProperty> stocks;
     private boolean isBankrupt;
     private int injureValue;
 
@@ -268,7 +268,7 @@ public class Player {
         cards.put(cardType, cards.get(cardType) - 1);
     }
 
-    public Hashtable<Stock, Integer> getStocks() {
+    public Hashtable<Stock, IntegerProperty> getStocks() {
         return stocks;
     }
 

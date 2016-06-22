@@ -21,6 +21,15 @@ public class NumberUtil {
         }
     }
 
+    public static boolean isInt(String s) {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+    }
+
     public static <T> DoubleBinding sum(ObservableList<T> list, Function<T, DoubleBinding> getNumber) {
         DoubleBinding result = Bindings.createDoubleBinding(() -> list.stream().map(getNumber)
                 .map(DoubleBinding::get)

@@ -4,18 +4,19 @@ import action.command.CommandType;
 import action.command.ErrorCommand;
 import action.command.PromptCommand;
 import action.command.SimpleCommandFactory;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import model.Player;
-
-import java.util.ArrayList;
 
 /**
  * Created by Ethan on 16/5/1.
  */
 public class StockMarket {
-    private ArrayList<Stock> stocks;
+    private ObservableList<Stock> stocks;
 
     public StockMarket() {
-        stocks = new ArrayList<>();
+        stocks = FXCollections.observableArrayList();
     }
 
     public void open() {
@@ -33,9 +34,9 @@ public class StockMarket {
         int preAmount = amount;
         if (player.payWithDepositPriority(cost)) {
             if (player.getStocks().containsKey(stock)) {
-                amount += player.getStocks().get(stock);
+                amount += player.getStocks().get(stock).get();
             }
-            player.getStocks().put(stock, amount);
+            player.getStocks().put(stock, new SimpleIntegerProperty(amount));
             PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
             command.setCommandStr("买进 " + stock.getName() + " " + preAmount + "股");
             return true;
@@ -49,9 +50,9 @@ public class StockMarket {
         Stock stock = stocks.stream().filter(e -> e.getId() == stockId).findFirst().get();
         ErrorCommand errorCommand = (ErrorCommand) SimpleCommandFactory.createCommand(CommandType.ERROR_COMMAND);
         if (player.getStocks().containsKey(stock)) {
-            if (player.getStocks().get(stock) > amount) {
-                int postAmount = player.getStocks().get(stock) - amount;
-                player.getStocks().put(stock, postAmount);
+            if (player.getStocks().get(stock).get() > amount) {
+                int postAmount = player.getStocks().get(stock).get() - amount;
+                player.getStocks().put(stock, new SimpleIntegerProperty(postAmount));
                 PromptCommand command = (PromptCommand) SimpleCommandFactory.createCommand(CommandType.PROMPT_COMMAND);
                 command.setCommandStr("卖出 " + stock.getName() + " " + amount + "股");
                 return true;
@@ -69,7 +70,7 @@ public class StockMarket {
         stocks.add(stock);
     }
 
-    public ArrayList<Stock> getStocks() {
+    public ObservableList<Stock> getStocks() {
         return stocks;
     }
 }

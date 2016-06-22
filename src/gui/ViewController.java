@@ -4,6 +4,7 @@ package gui;/**
 
 import gui.impl.PromptImpl;
 import gui.init.InitViewController;
+import gui.menu.StockMenu;
 import gui.view.MapViewController;
 import gui.view.RootLayoutController;
 import javafx.application.Application;
@@ -11,7 +12,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import model.Kernel;
@@ -22,8 +22,8 @@ public class ViewController extends Application {
 
     private Stage primaryStage;
     private BorderPane rootLayout;
+    private static Scene mainScene;
     private static Group mapView;
-    private static GraphicsContext gc;
     private static MapViewController mapViewController;
     private static RootLayoutController rootLayoutController;
 
@@ -71,13 +71,15 @@ public class ViewController extends Application {
             rootLayout = loader.load();
 
             rootLayoutController = loader.getController();
+            rootLayoutController.setViewController(this);
+
             // Give RootLayoutController to other Class
             PromptImpl prompt = new PromptImpl();
             prompt.setViewController(loader.getController());
 
             // Show the scene containing the root layout.
-            Scene scene = new Scene(rootLayout);
-            primaryStage.setScene(scene);
+            mainScene = new Scene(rootLayout);
+            primaryStage.setScene(mainScene);
             showMapView();
             Thread thread = new Thread(() -> {
                 Kernel.getInstance().addCards();
@@ -96,7 +98,23 @@ public class ViewController extends Application {
 
         // Set person overview into the center of root layout.
         rootLayout.setCenter(mapView);
+    }
 
+    public void showStockMenu(){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("menu/StockMenu.fxml"));
+            Scene scene = new Scene(loader.load());
+            StockMenu stockMenu = loader.getController();
+            stockMenu.setViewController(this);
+            primaryStage.setScene(scene);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public void showMainView(){
+        primaryStage.setScene(mainScene);
     }
 
     public static void repaint() {
@@ -114,10 +132,6 @@ public class ViewController extends Application {
 
     public static Group getMapView() {
         return mapView;
-    }
-
-    public static GraphicsContext getGc() {
-        return gc;
     }
 
     public static MapViewController getMapViewController() {
